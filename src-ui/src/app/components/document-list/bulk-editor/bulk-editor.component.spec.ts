@@ -1,0 +1,1748 @@
+import { DatePipe } from '@angular/common'
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
+import {
+  HttpTestingController,
+  provideHttpClientTesting,
+} from '@angular/common/http/testing'
+import { EventEmitter, signal } from '@angular/core'
+import { ComponentFixture, TestBed } from '@angular/core/testing'
+import { By } from '@angular/platform-browser'
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap'
+import { NgxBootstrapIconsModule, allIcons } from 'ngx-bootstrap-icons'
+import { of, throwError } from 'rxjs'
+import { Correspondent } from 'src/app/data/correspondent'
+import { CustomField, CustomFieldDataType } from 'src/app/data/custom-field'
+import { DocumentType } from 'src/app/data/document-type'
+import { FILTER_TITLE } from 'src/app/data/filter-rule-type'
+import { Results } from 'src/app/data/results'
+import { StoragePath } from 'src/app/data/storage-path'
+import { Tag } from 'src/app/data/tag'
+import { FilterPipe } from 'src/app/pipes/filter.pipe'
+import { DocumentListViewService } from 'src/app/services/document-list-view.service'
+import { PermissionsService } from 'src/app/services/permissions.service'
+import { CorrespondentService } from 'src/app/services/rest/correspondent.service'
+import { CustomFieldsService } from 'src/app/services/rest/custom-fields.service'
+import { DocumentTypeService } from 'src/app/services/rest/document-type.service'
+import {
+  DocumentService,
+  SelectionData,
+} from 'src/app/services/rest/document.service'
+import { GroupService } from 'src/app/services/rest/group.service'
+import { ShareLinkBundleService } from 'src/app/services/rest/share-link-bundle.service'
+import { StoragePathService } from 'src/app/services/rest/storage-path.service'
+import { TagService } from 'src/app/services/rest/tag.service'
+import { UserService } from 'src/app/services/rest/user.service'
+import { SettingsService } from 'src/app/services/settings.service'
+import { ToastService } from 'src/app/services/toast.service'
+import { environment } from 'src/environments/environment'
+import { CorrespondentEditDialogComponent } from '../../common/edit-dialog/correspondent-edit-dialog/correspondent-edit-dialog.component'
+import { CustomFieldEditDialogComponent } from '../../common/edit-dialog/custom-field-edit-dialog/custom-field-edit-dialog.component'
+import { DocumentTypeEditDialogComponent } from '../../common/edit-dialog/document-type-edit-dialog/document-type-edit-dialog.component'
+import { StoragePathEditDialogComponent } from '../../common/edit-dialog/storage-path-edit-dialog/storage-path-edit-dialog.component'
+import { TagEditDialogComponent } from '../../common/edit-dialog/tag-edit-dialog/tag-edit-dialog.component'
+import { FilterableDropdownComponent } from '../../common/filterable-dropdown/filterable-dropdown.component'
+import { ShareLinkBundleDialogComponent } from '../../common/share-link-bundle-dialog/share-link-bundle-dialog.component'
+import { ShareLinkBundleManageDialogComponent } from '../../common/share-link-bundle-manage-dialog/share-link-bundle-manage-dialog.component'
+import { BulkEditorComponent } from './bulk-editor.component'
+
+const selectionData: SelectionData = {
+  selected_tags: [
+    { id: 12, document_count: 3 },
+    { id: 22, document_count: 1 },
+    { id: 19, document_count: 0 },
+  ],
+  selected_correspondents: [{ id: 33, document_count: 1 }],
+  selected_document_types: [{ id: 44, document_count: 3 }],
+  selected_storage_paths: [
+    { id: 66, document_count: 3 },
+    { id: 55, document_count: 0 },
+  ],
+  selected_custom_fields: [
+    { id: 77, document_count: 3 },
+    { id: 88, document_count: 0 },
+  ],
+}
+
+describe('BulkEditorComponent', () => {
+  let component: BulkEditorComponent
+  let fixture: ComponentFixture<BulkEditorComponent>
+  let permissionsService: PermissionsService
+  let documentListViewService: DocumentListViewService
+  let documentService: DocumentService
+  let toastService: ToastService
+  let modalService: NgbModal
+  let tagService: TagService
+  let correspondentsService: CorrespondentService
+  let documentTypeService: DocumentTypeService
+  let storagePathService: StoragePathService
+  let customFieldsService: CustomFieldsService
+  let httpTestingController: HttpTestingController
+  let shareLinkBundleService: ShareLinkBundleService
+
+  beforeEach(async () => {
+    TestBed.configureTestingModule({
+      imports: [BulkEditorComponent, NgxBootstrapIconsModule.pick(allIcons)],
+      providers: [
+        PermissionsService,
+        {
+          provide: TagService,
+          useValue: {
+            listAll: () =>
+              of({
+                results: [
+                  { id: 12, name: 'tag12' },
+                  { id: 22, name: 'tag22' },
+                ],
+              }),
+          },
+        },
+        {
+          provide: CorrespondentService,
+          useValue: {
+            listAll: () =>
+              of({
+                results: [{ id: 33, name: 'correspondent33' }],
+              }),
+          },
+        },
+        {
+          provide: DocumentTypeService,
+          useValue: {
+            listAll: () =>
+              of({
+                results: [{ id: 44, name: 'doctype44' }],
+              }),
+          },
+        },
+        {
+          provide: StoragePathService,
+          useValue: {
+            listAll: () =>
+              of({
+                results: [
+                  { id: 66, name: 'storagepath66' },
+                  { id: 55, name: 'storagepath55' },
+                ],
+              }),
+          },
+        },
+        {
+          provide: CustomFieldsService,
+          useValue: {
+            listAll: () =>
+              of({
+                results: [
+                  { id: 77, name: 'customfield1' },
+                  { id: 88, name: 'customfield2' },
+                ],
+              }),
+          },
+        },
+        FilterPipe,
+        DatePipe,
+        SettingsService,
+        {
+          provide: UserService,
+          useValue: {
+            listAll: () =>
+              of({
+                results: [{ id: 1, username: 'user1' }],
+              }),
+          },
+        },
+        {
+          provide: GroupService,
+          useValue: {
+            listAll: () =>
+              of({
+                results: [],
+              }),
+          },
+        },
+        {
+          provide: ShareLinkBundleService,
+          useValue: {
+            createBundle: jest.fn(),
+            listAllBundles: jest.fn(),
+            rebuildBundle: jest.fn(),
+            delete: jest.fn(),
+          },
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+      ],
+    }).compileComponents()
+
+    permissionsService = TestBed.inject(PermissionsService)
+    documentListViewService = TestBed.inject(DocumentListViewService)
+    documentService = TestBed.inject(DocumentService)
+    toastService = TestBed.inject(ToastService)
+    modalService = TestBed.inject(NgbModal)
+    tagService = TestBed.inject(TagService)
+    correspondentsService = TestBed.inject(CorrespondentService)
+    documentTypeService = TestBed.inject(DocumentTypeService)
+    storagePathService = TestBed.inject(StoragePathService)
+    customFieldsService = TestBed.inject(CustomFieldsService)
+    httpTestingController = TestBed.inject(HttpTestingController)
+    shareLinkBundleService = TestBed.inject(ShareLinkBundleService)
+
+    fixture = TestBed.createComponent(BulkEditorComponent)
+    component = fixture.componentInstance
+  })
+
+  afterEach(async () => {
+    httpTestingController.verify()
+  })
+
+  it('should apply selection data to tags menu', () => {
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    fixture.detectChanges()
+    expect(component.tagSelectionModel.getSelectedItems()).toHaveLength(0)
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 5, 7]))
+    jest
+      .spyOn(documentService, 'getSelectionData')
+      .mockReturnValue(of(selectionData))
+    component.openTagsDropdown()
+    expect(component.tagSelectionModel.selectionSize()).toEqual(1)
+  })
+
+  it('should apply selection data to correspondents menu', () => {
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    fixture.detectChanges()
+    expect(
+      component.correspondentSelectionModel.getSelectedItems()
+    ).toHaveLength(0)
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 5, 7]))
+    jest
+      .spyOn(documentService, 'getSelectionData')
+      .mockReturnValue(of(selectionData))
+    component.openCorrespondentDropdown()
+    expect(component.correspondentSelectionModel.items).toHaveLength(2)
+    expect(component.correspondentSelectionModel.selectionSize()).toEqual(0)
+  })
+
+  it('should apply selection data to doc types menu', () => {
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    fixture.detectChanges()
+    expect(
+      component.documentTypeSelectionModel.getSelectedItems()
+    ).toHaveLength(0)
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 5, 7]))
+    jest
+      .spyOn(documentService, 'getSelectionData')
+      .mockReturnValue(of(selectionData))
+    component.openDocumentTypeDropdown()
+    expect(component.documentTypeSelectionModel.selectionSize()).toEqual(1)
+  })
+
+  it('should apply selection data to storage path menu', () => {
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    fixture.detectChanges()
+    expect(
+      component.storagePathsSelectionModel.getSelectedItems()
+    ).toHaveLength(0)
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 5, 7]))
+    jest
+      .spyOn(documentService, 'getSelectionData')
+      .mockReturnValue(of(selectionData))
+    component.openStoragePathDropdown()
+    expect(component.storagePathsSelectionModel.selectionSize()).toEqual(1)
+  })
+
+  it('should apply selection data to custom fields menu', () => {
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    fixture.detectChanges()
+    expect(
+      component.customFieldsSelectionModel.getSelectedItems()
+    ).toHaveLength(0)
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 5, 7]))
+    jest
+      .spyOn(documentService, 'getSelectionData')
+      .mockReturnValue(of(selectionData))
+    component.openCustomFieldsDropdown()
+    expect(component.customFieldsSelectionModel.selectionSize()).toEqual(1)
+  })
+
+  it('should apply list selection data to tags menu when all filtered documents are selected', () => {
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    fixture.detectChanges()
+    jest
+      .spyOn(documentListViewService, 'allSelected', 'get')
+      .mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'selectedCount', 'get')
+      .mockReturnValue(3)
+    documentListViewService.selectionData = selectionData
+    const getSelectionDataSpy = jest.spyOn(documentService, 'getSelectionData')
+
+    component.openTagsDropdown()
+
+    expect(getSelectionDataSpy).not.toHaveBeenCalled()
+    expect(component.tagSelectionModel.selectionSize()).toEqual(1)
+  })
+
+  it('should apply list selection data to document types menu when all filtered documents are selected', () => {
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    fixture.detectChanges()
+    jest
+      .spyOn(documentListViewService, 'allSelected', 'get')
+      .mockReturnValue(true)
+    documentListViewService.selectionData = selectionData
+    const getSelectionDataSpy = jest.spyOn(documentService, 'getSelectionData')
+
+    component.openDocumentTypeDropdown()
+
+    expect(getSelectionDataSpy).not.toHaveBeenCalled()
+    expect(component.documentTypeDocumentCounts).toEqual(
+      selectionData.selected_document_types
+    )
+  })
+
+  it('should apply list selection data to correspondents menu when all filtered documents are selected', () => {
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    fixture.detectChanges()
+    jest
+      .spyOn(documentListViewService, 'allSelected', 'get')
+      .mockReturnValue(true)
+    documentListViewService.selectionData = selectionData
+    const getSelectionDataSpy = jest.spyOn(documentService, 'getSelectionData')
+
+    component.openCorrespondentDropdown()
+
+    expect(getSelectionDataSpy).not.toHaveBeenCalled()
+    expect(component.correspondentDocumentCounts).toEqual(
+      selectionData.selected_correspondents
+    )
+  })
+
+  it('should apply list selection data to storage paths menu when all filtered documents are selected', () => {
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    fixture.detectChanges()
+    jest
+      .spyOn(documentListViewService, 'allSelected', 'get')
+      .mockReturnValue(true)
+    documentListViewService.selectionData = selectionData
+    const getSelectionDataSpy = jest.spyOn(documentService, 'getSelectionData')
+
+    component.openStoragePathDropdown()
+
+    expect(getSelectionDataSpy).not.toHaveBeenCalled()
+    expect(component.storagePathDocumentCounts).toEqual(
+      selectionData.selected_storage_paths
+    )
+  })
+
+  it('should apply list selection data to custom fields menu when all filtered documents are selected', () => {
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    fixture.detectChanges()
+    jest
+      .spyOn(documentListViewService, 'allSelected', 'get')
+      .mockReturnValue(true)
+    documentListViewService.selectionData = selectionData
+    const getSelectionDataSpy = jest.spyOn(documentService, 'getSelectionData')
+
+    component.openCustomFieldsDropdown()
+
+    expect(getSelectionDataSpy).not.toHaveBeenCalled()
+    expect(component.customFieldDocumentCounts).toEqual(
+      selectionData.selected_custom_fields
+    )
+  })
+
+  it('should execute modify tags bulk operation', () => {
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'documents', 'get')
+      .mockReturnValue([{ id: 3 }, { id: 4 }])
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 4]))
+    jest
+      .spyOn(permissionsService, 'currentUserHasObjectPermissions')
+      .mockReturnValue(true)
+    component.showConfirmationDialogs = false
+    fixture.detectChanges()
+    component.setTags({
+      itemsToAdd: [{ id: 101 }],
+      itemsToRemove: [],
+    })
+    let req = httpTestingController.expectOne(
+      `${environment.apiBaseUrl}documents/bulk_edit/`
+    )
+    req.flush(true)
+    expect(req.request.body).toEqual({
+      documents: [3, 4],
+      method: 'modify_tags',
+      parameters: { add_tags: [101], remove_tags: [] },
+    })
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=50&ordering=-created&truncate_content=true&include_selection_data=true`
+    ) // list reload
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=100000&fields=id`
+    ) // listAllFilteredIds
+  })
+
+  it('should execute modify tags bulk operation for all filtered documents', () => {
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'documents', 'get')
+      .mockReturnValue([{ id: 3 }, { id: 4 }])
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 4]))
+    jest
+      .spyOn(documentListViewService, 'allSelected', 'get')
+      .mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'filterRules', 'get')
+      .mockReturnValue([{ rule_type: FILTER_TITLE, value: 'apple' }])
+    jest
+      .spyOn(documentListViewService, 'selectedCount', 'get')
+      .mockReturnValue(25)
+    jest
+      .spyOn(permissionsService, 'currentUserHasObjectPermissions')
+      .mockReturnValue(true)
+    component.showConfirmationDialogs = false
+    fixture.detectChanges()
+
+    component.setTags({
+      itemsToAdd: [{ id: 101 }],
+      itemsToRemove: [],
+    })
+
+    const req = httpTestingController.expectOne(
+      `${environment.apiBaseUrl}documents/bulk_edit/`
+    )
+    req.flush(true)
+    expect(req.request.body).toEqual({
+      all: true,
+      filters: { title_search: 'apple' },
+      method: 'modify_tags',
+      parameters: { add_tags: [101], remove_tags: [] },
+    })
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=50&ordering=-created&truncate_content=true&include_selection_data=true`
+    ) // list reload
+  })
+
+  it('should execute modify tags bulk operation with confirmation dialog if enabled', () => {
+    let modal: NgbModalRef
+    modalService.activeInstances.subscribe((m) => (modal = m[0]))
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'documents', 'get')
+      .mockReturnValue([{ id: 3 }, { id: 4 }])
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 4]))
+    jest
+      .spyOn(permissionsService, 'currentUserHasObjectPermissions')
+      .mockReturnValue(true)
+    component.showConfirmationDialogs = true
+    fixture.detectChanges()
+    component.setTags({
+      itemsToAdd: [{ id: 101 }],
+      itemsToRemove: [],
+    })
+    expect(modal).not.toBeUndefined()
+    modal.componentInstance.confirm()
+    httpTestingController
+      .expectOne(`${environment.apiBaseUrl}documents/bulk_edit/`)
+      .flush(true)
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=50&ordering=-created&truncate_content=true&include_selection_data=true`
+    ) // list reload
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=100000&fields=id`
+    ) // listAllFilteredIds
+  })
+
+  it('should set modal dialog text accordingly for tag edit confirmation', () => {
+    let modal: NgbModalRef
+    modalService.activeInstances.subscribe((m) => (modal = m[m.length - 1]))
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'documents', 'get')
+      .mockReturnValue([{ id: 3 }, { id: 4 }])
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 4]))
+    jest
+      .spyOn(permissionsService, 'currentUserHasObjectPermissions')
+      .mockReturnValue(true)
+    component.showConfirmationDialogs = true
+    fixture.detectChanges()
+    component.setTags({
+      itemsToAdd: [],
+      itemsToRemove: [{ id: 101, name: 'Tag 101' }],
+    })
+    expect(modal.componentInstance.message).toEqual(
+      'This operation will remove the tag "Tag 101" from 2 selected document(s).'
+    )
+    modal.close()
+    component.setTags({
+      itemsToAdd: [],
+      itemsToRemove: [
+        { id: 101, name: 'Tag 101' },
+        { id: 102, name: 'Tag 102' },
+      ],
+    })
+    expect(modal.componentInstance.message).toEqual(
+      'This operation will remove the tags "Tag 101" and "Tag 102" from 2 selected document(s).'
+    )
+    modal.close()
+    component.setTags({
+      itemsToAdd: [
+        { id: 101, name: 'Tag 101' },
+        { id: 102, name: 'Tag 102' },
+      ],
+      itemsToRemove: [],
+    })
+    expect(modal.componentInstance.message).toEqual(
+      'This operation will add the tags "Tag 101" and "Tag 102" to 2 selected document(s).'
+    )
+    modal.close()
+    component.setTags({
+      itemsToAdd: [
+        { id: 101, name: 'Tag 101' },
+        { id: 102, name: 'Tag 102' },
+      ],
+      itemsToRemove: [{ id: 103, name: 'Tag 103' }],
+    })
+    expect(modal.componentInstance.message).toEqual(
+      'This operation will add the tags "Tag 101" and "Tag 102" and remove the tags "Tag 103" on 2 selected document(s).'
+    )
+  })
+
+  it('should execute modify correspondent bulk operation', () => {
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'documents', 'get')
+      .mockReturnValue([{ id: 3 }, { id: 4 }])
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 4]))
+    jest
+      .spyOn(permissionsService, 'currentUserHasObjectPermissions')
+      .mockReturnValue(true)
+    component.showConfirmationDialogs = false
+    fixture.detectChanges()
+    component.setCorrespondents({
+      itemsToAdd: [{ id: 101 }],
+      itemsToRemove: [],
+    })
+    let req = httpTestingController.expectOne(
+      `${environment.apiBaseUrl}documents/bulk_edit/`
+    )
+    req.flush(true)
+    expect(req.request.body).toEqual({
+      documents: [3, 4],
+      method: 'set_correspondent',
+      parameters: { correspondent: 101 },
+    })
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=50&ordering=-created&truncate_content=true&include_selection_data=true`
+    ) // list reload
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=100000&fields=id`
+    ) // listAllFilteredIds
+  })
+
+  it('should execute modify correspondent bulk operation with confirmation dialog if enabled', () => {
+    let modal: NgbModalRef
+    modalService.activeInstances.subscribe((m) => (modal = m[0]))
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'documents', 'get')
+      .mockReturnValue([{ id: 3 }, { id: 4 }])
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 4]))
+    jest
+      .spyOn(permissionsService, 'currentUserHasObjectPermissions')
+      .mockReturnValue(true)
+    component.showConfirmationDialogs = true
+    fixture.detectChanges()
+    component.setCorrespondents({
+      itemsToAdd: [{ id: 101 }],
+      itemsToRemove: [],
+    })
+    expect(modal).not.toBeUndefined()
+    modal.componentInstance.confirm()
+    httpTestingController
+      .expectOne(`${environment.apiBaseUrl}documents/bulk_edit/`)
+      .flush(true)
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=50&ordering=-created&truncate_content=true&include_selection_data=true`
+    ) // list reload
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=100000&fields=id`
+    ) // listAllFilteredIds
+  })
+
+  it('should set modal dialog text accordingly for correspondent edit confirmation', () => {
+    let modal: NgbModalRef
+    modalService.activeInstances.subscribe((m) => (modal = m[m.length - 1]))
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'documents', 'get')
+      .mockReturnValue([{ id: 3 }, { id: 4 }])
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 4]))
+    jest
+      .spyOn(permissionsService, 'currentUserHasObjectPermissions')
+      .mockReturnValue(true)
+    component.showConfirmationDialogs = true
+    fixture.detectChanges()
+    component.setCorrespondents({
+      itemsToAdd: [],
+      itemsToRemove: [{ id: 101, name: 'Correspondent 101' }],
+    })
+    expect(modal.componentInstance.message).toEqual(
+      'This operation will remove the correspondent from 2 selected document(s).'
+    )
+    modal.close()
+    component.setCorrespondents({
+      itemsToAdd: [{ id: 101, name: 'Correspondent 101' }],
+      itemsToRemove: [],
+    })
+    expect(modal.componentInstance.message).toEqual(
+      'This operation will assign the correspondent "Correspondent 101" to 2 selected document(s).'
+    )
+  })
+
+  it('should execute modify document type bulk operation', () => {
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'documents', 'get')
+      .mockReturnValue([{ id: 3 }, { id: 4 }])
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 4]))
+    jest
+      .spyOn(permissionsService, 'currentUserHasObjectPermissions')
+      .mockReturnValue(true)
+    component.showConfirmationDialogs = false
+    fixture.detectChanges()
+    component.setDocumentTypes({
+      itemsToAdd: [{ id: 101 }],
+      itemsToRemove: [],
+    })
+    let req = httpTestingController.expectOne(
+      `${environment.apiBaseUrl}documents/bulk_edit/`
+    )
+    req.flush(true)
+    expect(req.request.body).toEqual({
+      documents: [3, 4],
+      method: 'set_document_type',
+      parameters: { document_type: 101 },
+    })
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=50&ordering=-created&truncate_content=true&include_selection_data=true`
+    ) // list reload
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=100000&fields=id`
+    ) // listAllFilteredIds
+  })
+
+  it('should execute modify document type bulk operation with confirmation dialog if enabled', () => {
+    let modal: NgbModalRef
+    modalService.activeInstances.subscribe((m) => (modal = m[0]))
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'documents', 'get')
+      .mockReturnValue([{ id: 3 }, { id: 4 }])
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 4]))
+    jest
+      .spyOn(permissionsService, 'currentUserHasObjectPermissions')
+      .mockReturnValue(true)
+    component.showConfirmationDialogs = true
+    fixture.detectChanges()
+    component.setDocumentTypes({
+      itemsToAdd: [{ id: 101 }],
+      itemsToRemove: [],
+    })
+    expect(modal).not.toBeUndefined()
+    modal.componentInstance.confirm()
+    httpTestingController
+      .expectOne(`${environment.apiBaseUrl}documents/bulk_edit/`)
+      .flush(true)
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=50&ordering=-created&truncate_content=true&include_selection_data=true`
+    ) // list reload
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=100000&fields=id`
+    ) // listAllFilteredIds
+  })
+
+  it('should set modal dialog text accordingly for document type edit confirmation', () => {
+    let modal: NgbModalRef
+    modalService.activeInstances.subscribe((m) => (modal = m[m.length - 1]))
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'documents', 'get')
+      .mockReturnValue([{ id: 3 }, { id: 4 }])
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 4]))
+    jest
+      .spyOn(permissionsService, 'currentUserHasObjectPermissions')
+      .mockReturnValue(true)
+    component.showConfirmationDialogs = true
+    fixture.detectChanges()
+    component.setDocumentTypes({
+      itemsToAdd: [],
+      itemsToRemove: [{ id: 101, name: 'DocType 101' }],
+    })
+    expect(modal.componentInstance.message).toEqual(
+      'This operation will remove the document type from 2 selected document(s).'
+    )
+    modal.close()
+    component.setDocumentTypes({
+      itemsToAdd: [{ id: 101, name: 'DocType 101' }],
+      itemsToRemove: [],
+    })
+    expect(modal.componentInstance.message).toEqual(
+      'This operation will assign the document type "DocType 101" to 2 selected document(s).'
+    )
+  })
+
+  it('should execute modify storage path bulk operation', () => {
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'documents', 'get')
+      .mockReturnValue([{ id: 3 }, { id: 4 }])
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 4]))
+    jest
+      .spyOn(permissionsService, 'currentUserHasObjectPermissions')
+      .mockReturnValue(true)
+    component.showConfirmationDialogs = false
+    fixture.detectChanges()
+    component.setStoragePaths({
+      itemsToAdd: [{ id: 101 }],
+      itemsToRemove: [],
+    })
+    let req = httpTestingController.expectOne(
+      `${environment.apiBaseUrl}documents/bulk_edit/`
+    )
+    req.flush(true)
+    expect(req.request.body).toEqual({
+      documents: [3, 4],
+      method: 'set_storage_path',
+      parameters: { storage_path: 101 },
+    })
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=50&ordering=-created&truncate_content=true&include_selection_data=true`
+    ) // list reload
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=100000&fields=id`
+    ) // listAllFilteredIds
+  })
+
+  it('should execute modify storage path bulk operation with confirmation dialog if enabled', () => {
+    let modal: NgbModalRef
+    modalService.activeInstances.subscribe((m) => (modal = m[0]))
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'documents', 'get')
+      .mockReturnValue([{ id: 3 }, { id: 4 }])
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 4]))
+    jest
+      .spyOn(permissionsService, 'currentUserHasObjectPermissions')
+      .mockReturnValue(true)
+    component.showConfirmationDialogs = true
+    fixture.detectChanges()
+    component.setStoragePaths({
+      itemsToAdd: [{ id: 101 }],
+      itemsToRemove: [],
+    })
+    expect(modal).not.toBeUndefined()
+    modal.componentInstance.confirm()
+    httpTestingController
+      .expectOne(`${environment.apiBaseUrl}documents/bulk_edit/`)
+      .flush(true)
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=50&ordering=-created&truncate_content=true&include_selection_data=true`
+    ) // list reload
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=100000&fields=id`
+    ) // listAllFilteredIds
+  })
+
+  it('should set modal dialog text accordingly for storage path edit confirmation', () => {
+    let modal: NgbModalRef
+    modalService.activeInstances.subscribe((m) => (modal = m[m.length - 1]))
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'documents', 'get')
+      .mockReturnValue([{ id: 3 }, { id: 4 }])
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 4]))
+    jest
+      .spyOn(permissionsService, 'currentUserHasObjectPermissions')
+      .mockReturnValue(true)
+    component.showConfirmationDialogs = true
+    fixture.detectChanges()
+    component.setStoragePaths({
+      itemsToAdd: [],
+      itemsToRemove: [{ id: 101, name: 'StoragePath 101' }],
+    })
+    expect(modal.componentInstance.message).toEqual(
+      'This operation will remove the storage path from 2 selected document(s).'
+    )
+    modal.close()
+    component.setStoragePaths({
+      itemsToAdd: [{ id: 101, name: 'StoragePath 101' }],
+      itemsToRemove: [],
+    })
+    expect(modal.componentInstance.message).toEqual(
+      'This operation will assign the storage path "StoragePath 101" to 2 selected document(s).'
+    )
+  })
+
+  it('should execute modify custom fields bulk operation', () => {
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'documents', 'get')
+      .mockReturnValue([{ id: 3 }, { id: 4 }])
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 4]))
+    jest
+      .spyOn(permissionsService, 'currentUserHasObjectPermissions')
+      .mockReturnValue(true)
+    component.showConfirmationDialogs = false
+    fixture.detectChanges()
+    component.setCustomFields({
+      itemsToAdd: [{ id: 101 }],
+      itemsToRemove: [{ id: 102 }],
+    })
+    let req = httpTestingController.expectOne(
+      `${environment.apiBaseUrl}documents/bulk_edit/`
+    )
+    req.flush(true)
+    expect(req.request.body).toEqual({
+      documents: [3, 4],
+      method: 'modify_custom_fields',
+      parameters: { add_custom_fields: [101], remove_custom_fields: [102] },
+    })
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=50&ordering=-created&truncate_content=true&include_selection_data=true`
+    ) // list reload
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=100000&fields=id`
+    ) // listAllFilteredIds
+  })
+
+  it('should execute modify custom fields bulk operation with confirmation dialog if enabled', () => {
+    let modal: NgbModalRef
+    modalService.activeInstances.subscribe((m) => (modal = m[0]))
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'documents', 'get')
+      .mockReturnValue([{ id: 3 }, { id: 4 }])
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 4]))
+    jest
+      .spyOn(permissionsService, 'currentUserHasObjectPermissions')
+      .mockReturnValue(true)
+    component.showConfirmationDialogs = true
+    fixture.detectChanges()
+    component.setCustomFields({
+      itemsToAdd: [{ id: 101 }],
+      itemsToRemove: [{ id: 102 }],
+    })
+    expect(modal).not.toBeUndefined()
+    modal.componentInstance.confirm()
+    httpTestingController
+      .expectOne(`${environment.apiBaseUrl}documents/bulk_edit/`)
+      .flush(true)
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=50&ordering=-created&truncate_content=true&include_selection_data=true`
+    ) // list reload
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=100000&fields=id`
+    ) // listAllFilteredIds
+
+    // coverage for modal messages
+    component.setCustomFields({
+      itemsToAdd: [{ id: 101 }],
+      itemsToRemove: [],
+    })
+    component.setCustomFields({
+      itemsToAdd: [{ id: 101 }, { id: 102 }],
+      itemsToRemove: [],
+    })
+    component.setCustomFields({
+      itemsToAdd: [],
+      itemsToRemove: [{ id: 101 }, { id: 102 }],
+    })
+    component.setCustomFields({
+      itemsToAdd: [{ id: 100 }],
+      itemsToRemove: [{ id: 101 }, { id: 102 }],
+    })
+  })
+
+  it('should set modal dialog text accordingly for custom fields edit confirmation', () => {
+    let modal: NgbModalRef
+    modalService.activeInstances.subscribe((m) => (modal = m[m.length - 1]))
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'documents', 'get')
+      .mockReturnValue([{ id: 3 }, { id: 4 }])
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 4]))
+    jest
+      .spyOn(permissionsService, 'currentUserHasObjectPermissions')
+      .mockReturnValue(true)
+    component.showConfirmationDialogs = true
+    fixture.detectChanges()
+    component.setCustomFields({
+      itemsToAdd: [],
+      itemsToRemove: [{ id: 101, name: 'CustomField 101' }],
+    })
+    expect(modal.componentInstance.message).toEqual(
+      'This operation will remove the custom field "CustomField 101" from 2 selected document(s).'
+    )
+    modal.close()
+    component.setCustomFields({
+      itemsToAdd: [{ id: 101, name: 'CustomField 101' }],
+      itemsToRemove: [],
+    })
+    expect(modal.componentInstance.message).toEqual(
+      'This operation will assign the custom field "CustomField 101" to 2 selected document(s).'
+    )
+  })
+
+  it('should only execute bulk operations when changes are detected', () => {
+    component.setTags({
+      itemsToAdd: [],
+      itemsToRemove: [],
+    })
+    component.setCorrespondents({
+      itemsToAdd: [],
+      itemsToRemove: [],
+    })
+    component.setDocumentTypes({
+      itemsToAdd: [],
+      itemsToRemove: [],
+    })
+    component.setStoragePaths({
+      itemsToAdd: [],
+      itemsToRemove: [],
+    })
+    component.setCustomFields({
+      itemsToAdd: [],
+      itemsToRemove: [],
+    })
+    httpTestingController.expectNone(
+      `${environment.apiBaseUrl}documents/bulk_edit/`
+    )
+  })
+
+  it('should support bulk delete with confirmation or without', () => {
+    let modal: NgbModalRef
+    modalService.activeInstances.subscribe((m) => (modal = m[0]))
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'documents', 'get')
+      .mockReturnValue([{ id: 3 }, { id: 4 }])
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 4]))
+    jest
+      .spyOn(permissionsService, 'currentUserHasObjectPermissions')
+      .mockReturnValue(true)
+    component.showConfirmationDialogs = true
+    fixture.detectChanges()
+    component.applyDelete()
+    expect(modal).not.toBeUndefined()
+    modal.componentInstance.confirm()
+    let req = httpTestingController.expectOne(
+      `${environment.apiBaseUrl}documents/delete/`
+    )
+    req.flush(true)
+    expect(req.request.body).toEqual({
+      documents: [3, 4],
+    })
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=50&ordering=-created&truncate_content=true&include_selection_data=true`
+    ) // list reload
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=100000&fields=id`
+    ) // listAllFilteredIds
+
+    component.showConfirmationDialogs = false
+    fixture.detectChanges()
+    component.applyDelete()
+    req = httpTestingController.expectOne(
+      `${environment.apiBaseUrl}documents/delete/`
+    )
+  })
+
+  it('should not be accessible with insufficient global permissions', () => {
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(false)
+    fixture.detectChanges()
+    const dropdown = fixture.debugElement.query(
+      By.directive(FilterableDropdownComponent)
+    )
+    expect(dropdown).toBeNull()
+  })
+
+  it('should disable with insufficient object permissions', () => {
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'documents', 'get')
+      .mockReturnValue([{ id: 3 }, { id: 4 }])
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 4]))
+    jest
+      .spyOn(permissionsService, 'currentUserHasObjectPermissions')
+      .mockReturnValue(false)
+    fixture.detectChanges()
+    const button = fixture.debugElement
+      .query(By.directive(FilterableDropdownComponent))
+      .query(By.css('button'))
+    expect(button.nativeElement.disabled).toBeTruthy()
+  })
+
+  it('should show a warning toast on bulk edit error', () => {
+    jest
+      .spyOn(documentService, 'bulkEdit')
+      .mockReturnValue(
+        throwError(() => new Error('error executing bulk operation'))
+      )
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'documents', 'get')
+      .mockReturnValue([{ id: 3 }, { id: 4 }])
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 4]))
+    jest
+      .spyOn(permissionsService, 'currentUserHasObjectPermissions')
+      .mockReturnValue(true)
+    component.showConfirmationDialogs = false
+    fixture.detectChanges()
+    const toastSpy = jest.spyOn(toastService, 'showError')
+    component.setTags({
+      itemsToAdd: [{ id: 0 }],
+      itemsToRemove: [],
+    })
+    expect(toastSpy).toHaveBeenCalled()
+  })
+
+  it('should support redo ocr', () => {
+    let modal: NgbModalRef
+    modalService.activeInstances.subscribe((m) => (modal = m[0]))
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'documents', 'get')
+      .mockReturnValue([{ id: 3 }, { id: 4 }])
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 4]))
+    jest
+      .spyOn(permissionsService, 'currentUserHasObjectPermissions')
+      .mockReturnValue(true)
+    component.showConfirmationDialogs = true
+    fixture.detectChanges()
+    component.reprocessSelected()
+    expect(modal).not.toBeUndefined()
+    modal.componentInstance.confirm()
+    let req = httpTestingController.expectOne(
+      `${environment.apiBaseUrl}documents/reprocess/`
+    )
+    req.flush(true)
+    expect(req.request.body).toEqual({
+      documents: [3, 4],
+    })
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=50&ordering=-created&truncate_content=true&include_selection_data=true`
+    ) // list reload
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=100000&fields=id`
+    ) // listAllFilteredIds
+  })
+
+  it('should support rotate', () => {
+    let modal: NgbModalRef
+    modalService.activeInstances.subscribe((m) => (modal = m[0]))
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'documents', 'get')
+      .mockReturnValue([{ id: 3 }, { id: 4 }])
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 4]))
+    jest
+      .spyOn(permissionsService, 'currentUserHasObjectPermissions')
+      .mockReturnValue(true)
+    fixture.detectChanges()
+    component.rotateSelected()
+    expect(modal).not.toBeUndefined()
+    modal.componentInstance.rotate()
+    modal.componentInstance.confirm()
+    let req = httpTestingController.expectOne(
+      `${environment.apiBaseUrl}documents/rotate/`
+    )
+    req.flush(true)
+    expect(req.request.body).toEqual({
+      documents: [3, 4],
+      degrees: 90,
+      source_mode: 'latest_version',
+    })
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=50&ordering=-created&truncate_content=true&include_selection_data=true`
+    ) // list reload
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=100000&fields=id`
+    ) // listAllFilteredIds
+  })
+
+  it('should support merge', () => {
+    let modal: NgbModalRef
+    modalService.activeInstances.subscribe((m) => (modal = m[0]))
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'documents', 'get')
+      .mockReturnValue([{ id: 3 }, { id: 4 }])
+    jest.spyOn(documentService, 'getFew').mockReturnValue(
+      of({
+        all: [3, 4],
+        count: 2,
+        results: [{ id: 3 }, { id: 4 }],
+      })
+    )
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 4]))
+    jest
+      .spyOn(permissionsService, 'currentUserHasObjectPermissions')
+      .mockReturnValue(true)
+    fixture.detectChanges()
+    component.mergeSelected()
+    expect(modal).not.toBeUndefined()
+    modal.componentInstance.metadataDocumentID.set(3)
+    modal.componentInstance.confirm()
+    let req = httpTestingController.expectOne(
+      `${environment.apiBaseUrl}documents/merge/`
+    )
+    req.flush(true)
+    expect(req.request.body).toEqual({
+      documents: [3, 4],
+      metadata_document_id: 3,
+    })
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=50&ordering=-created&truncate_content=true&include_selection_data=true`
+    ) // list reload
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=100000&fields=id`
+    ) // listAllFilteredIds
+
+    // Test with Delete Originals enabled
+    modal.componentInstance.deleteOriginals.set(true)
+    modal.componentInstance.confirm()
+    req = httpTestingController.expectOne(
+      `${environment.apiBaseUrl}documents/merge/`
+    )
+    req.flush(true)
+    expect(req.request.body).toEqual({
+      documents: [3, 4],
+      metadata_document_id: 3,
+      delete_originals: true,
+    })
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=50&ordering=-created&truncate_content=true&include_selection_data=true`
+    ) // list reload
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=100000&fields=id`
+    ) // listAllFilteredIds
+    expect(documentListViewService.selected.size).toEqual(0)
+
+    // Test with archiveFallback enabled
+    modal.componentInstance.deleteOriginals.set(false)
+    modal.componentInstance.archiveFallback.set(true)
+    modal.componentInstance.confirm()
+    req = httpTestingController.expectOne(
+      `${environment.apiBaseUrl}documents/merge/`
+    )
+    req.flush(true)
+    expect(req.request.body).toEqual({
+      documents: [3, 4],
+      metadata_document_id: 3,
+      archive_fallback: true,
+    })
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=50&ordering=-created&truncate_content=true&include_selection_data=true`
+    ) // list reload
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=100000&fields=id`
+    ) // listAllFilteredIds
+    expect(documentListViewService.selected.size).toEqual(0)
+  })
+
+  it('should support bulk download with archive, originals or both and file formatting', () => {
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'documents', 'get')
+      .mockReturnValue([{ id: 3 }, { id: 4 }])
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 4]))
+    jest
+      .spyOn(permissionsService, 'currentUserHasObjectPermissions')
+      .mockReturnValue(true)
+    component.downloadForm.get('downloadFileTypeArchive').patchValue(true)
+    fixture.detectChanges()
+    let downloadSpy = jest.spyOn(documentService, 'bulkDownload')
+    downloadSpy.mockReturnValue(of(new Blob()))
+    //archive
+    component.downloadSelected()
+    expect(downloadSpy).toHaveBeenCalledWith(
+      { documents: [3, 4] },
+      'archive',
+      false
+    )
+    //originals
+    component.downloadForm.get('downloadFileTypeArchive').patchValue(false)
+    component.downloadForm.get('downloadFileTypeOriginals').patchValue(true)
+    component.downloadSelected()
+    expect(downloadSpy).toHaveBeenCalledWith(
+      { documents: [3, 4] },
+      'originals',
+      false
+    )
+    //both
+    component.downloadForm.get('downloadFileTypeArchive').patchValue(true)
+    component.downloadSelected()
+    expect(downloadSpy).toHaveBeenCalledWith(
+      { documents: [3, 4] },
+      'both',
+      false
+    )
+    //formatting
+    component.downloadForm.get('downloadUseFormatting').patchValue(true)
+    component.downloadSelected()
+    expect(downloadSpy).toHaveBeenCalledWith(
+      { documents: [3, 4] },
+      'both',
+      true
+    )
+
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/bulk_download/`
+    )
+  })
+
+  it('should support bulk permissions update', () => {
+    let modal: NgbModalRef
+    modalService.activeInstances.subscribe((m) => (modal = m[0]))
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'documents', 'get')
+      .mockReturnValue([{ id: 3 }, { id: 4 }])
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 4]))
+    jest
+      .spyOn(permissionsService, 'currentUserHasObjectPermissions')
+      .mockReturnValue(true)
+    component.showConfirmationDialogs = true
+    fixture.detectChanges()
+    component.setPermissions()
+    expect(modal).not.toBeUndefined()
+    const perms = {
+      permissions: {
+        view_users: [],
+        change_users: [],
+        view_groups: [],
+        change_groups: [],
+      },
+    }
+    modal.componentInstance.confirmClicked.emit({
+      permissions: perms,
+      merge: true,
+    })
+    let req = httpTestingController.expectOne(
+      `${environment.apiBaseUrl}documents/bulk_edit/`
+    )
+    req.flush(true)
+    expect(req.request.body).toEqual({
+      documents: [3, 4],
+      method: 'set_permissions',
+      parameters: {
+        permissions: perms.permissions,
+        merge: true,
+      },
+    })
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=50&ordering=-created&truncate_content=true&include_selection_data=true`
+    ) // list reload
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=100000&fields=id`
+    ) // listAllFilteredIds
+  })
+
+  it('should not attempt to retrieve objects if user does not have permissions', () => {
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    expect(component.tagSelectionModel.items.length).toEqual(0)
+    expect(component.correspondentSelectionModel.items.length).toEqual(0)
+    expect(component.documentTypeSelectionModel.items.length).toEqual(0)
+    expect(component.storagePathsSelectionModel.items.length).toEqual(0)
+    httpTestingController.expectNone(`${environment.apiBaseUrl}documents/tags/`)
+    httpTestingController.expectNone(
+      `${environment.apiBaseUrl}documents/correspondents/`
+    )
+    httpTestingController.expectNone(
+      `${environment.apiBaseUrl}documents/document_types/`
+    )
+    httpTestingController.expectNone(
+      `${environment.apiBaseUrl}documents/storage_paths/`
+    )
+  })
+
+  it('should support create new tag', () => {
+    const name = 'New Tag'
+    const newTag = { id: 101, name: 'New Tag' }
+    const tags: Results<Tag> = {
+      results: [
+        { id: 1, name: 'Tag 1' },
+        { id: 2, name: 'Tag 2' },
+      ],
+      count: 2,
+      all: [1, 2],
+    }
+
+    const modalInstance = {
+      componentInstance: {
+        dialogMode: { set: jest.fn() },
+        object: { name },
+        succeeded: of(newTag),
+      },
+    }
+    const tagListAllSpy = jest.spyOn(tagService, 'listAll')
+    tagListAllSpy.mockReturnValue(of(tags))
+
+    const tagSelectionModelToggleSpy = jest.spyOn(
+      component.tagSelectionModel,
+      'toggle'
+    )
+
+    const modalServiceOpenSpy = jest.spyOn(modalService, 'open')
+    modalServiceOpenSpy.mockReturnValue(modalInstance as any)
+
+    component.createTag(name)
+
+    expect(modalServiceOpenSpy).toHaveBeenCalledWith(TagEditDialogComponent, {
+      backdrop: 'static',
+    })
+    expect(tagListAllSpy).toHaveBeenCalled()
+
+    expect(tagSelectionModelToggleSpy).toHaveBeenCalledWith(newTag.id)
+    expect(component.tagSelectionModel.items).toMatchObject(
+      [{ id: null, name: 'Not assigned' }].concat(tags.results as any)
+    )
+  })
+
+  it('should support create new correspondent', () => {
+    const name = 'New Correspondent'
+    const newCorrespondent = { id: 101, name: 'New Correspondent' }
+    const correspondents: Results<Correspondent> = {
+      results: [
+        { id: 1, name: 'Correspondent 1' },
+        { id: 2, name: 'Correspondent 2' },
+      ],
+      count: 2,
+      all: [1, 2],
+    }
+
+    const modalInstance = {
+      componentInstance: {
+        dialogMode: { set: jest.fn() },
+        object: { name },
+        succeeded: of(newCorrespondent),
+      },
+    }
+    const correspondentsListAllSpy = jest.spyOn(
+      correspondentsService,
+      'listAll'
+    )
+    correspondentsListAllSpy.mockReturnValue(of(correspondents))
+
+    const correspondentSelectionModelToggleSpy = jest.spyOn(
+      component.correspondentSelectionModel,
+      'toggle'
+    )
+
+    const modalServiceOpenSpy = jest.spyOn(modalService, 'open')
+    modalServiceOpenSpy.mockReturnValue(modalInstance as any)
+
+    component.createCorrespondent(name)
+
+    expect(modalServiceOpenSpy).toHaveBeenCalledWith(
+      CorrespondentEditDialogComponent,
+      { backdrop: 'static' }
+    )
+    expect(correspondentsListAllSpy).toHaveBeenCalled()
+
+    expect(correspondentSelectionModelToggleSpy).toHaveBeenCalledWith(
+      newCorrespondent.id
+    )
+    expect(component.correspondentSelectionModel.items).toEqual(
+      [{ id: null, name: 'Not assigned' }].concat(correspondents.results as any)
+    )
+  })
+
+  it('should support create new document type', () => {
+    const name = 'New Document Type'
+    const newDocumentType = { id: 101, name: 'New Document Type' }
+    const documentTypes: Results<DocumentType> = {
+      results: [
+        { id: 1, name: 'Document Type 1' },
+        { id: 2, name: 'Document Type 2' },
+      ],
+      count: 2,
+      all: [1, 2],
+    }
+
+    const modalInstance = {
+      componentInstance: {
+        dialogMode: { set: jest.fn() },
+        object: { name },
+        succeeded: of(newDocumentType),
+      },
+    }
+    const documentTypesListAllSpy = jest.spyOn(documentTypeService, 'listAll')
+    documentTypesListAllSpy.mockReturnValue(of(documentTypes))
+
+    const documentTypeSelectionModelToggleSpy = jest.spyOn(
+      component.documentTypeSelectionModel,
+      'toggle'
+    )
+
+    const modalServiceOpenSpy = jest.spyOn(modalService, 'open')
+    modalServiceOpenSpy.mockReturnValue(modalInstance as any)
+
+    component.createDocumentType(name)
+
+    expect(modalServiceOpenSpy).toHaveBeenCalledWith(
+      DocumentTypeEditDialogComponent,
+      { backdrop: 'static' }
+    )
+    expect(documentTypesListAllSpy).toHaveBeenCalled()
+
+    expect(documentTypeSelectionModelToggleSpy).toHaveBeenCalledWith(
+      newDocumentType.id
+    )
+    expect(component.documentTypeSelectionModel.items).toEqual(
+      [{ id: null, name: 'Not assigned' }].concat(documentTypes.results as any)
+    )
+  })
+
+  it('should support create new storage path', () => {
+    const name = 'New Storage Path'
+    const newStoragePath = { id: 101, name: 'New Storage Path' }
+    const storagePaths: Results<StoragePath> = {
+      results: [
+        { id: 1, name: 'Storage Path 1' },
+        { id: 2, name: 'Storage Path 2' },
+      ],
+      count: 2,
+      all: [1, 2],
+    }
+
+    const modalInstance = {
+      componentInstance: {
+        dialogMode: { set: jest.fn() },
+        object: { name },
+        succeeded: of(newStoragePath),
+      },
+    }
+    const storagePathsListAllSpy = jest.spyOn(storagePathService, 'listAll')
+    storagePathsListAllSpy.mockReturnValue(of(storagePaths))
+
+    const storagePathsSelectionModelToggleSpy = jest.spyOn(
+      component.storagePathsSelectionModel,
+      'toggle'
+    )
+
+    const modalServiceOpenSpy = jest.spyOn(modalService, 'open')
+    modalServiceOpenSpy.mockReturnValue(modalInstance as any)
+
+    component.createStoragePath(name)
+
+    expect(modalServiceOpenSpy).toHaveBeenCalledWith(
+      StoragePathEditDialogComponent,
+      { backdrop: 'static' }
+    )
+    expect(storagePathsListAllSpy).toHaveBeenCalled()
+
+    expect(storagePathsSelectionModelToggleSpy).toHaveBeenCalledWith(
+      newStoragePath.id
+    )
+    expect(component.storagePathsSelectionModel.items).toEqual(
+      [{ id: null, name: 'Not assigned' }].concat(storagePaths.results as any)
+    )
+  })
+
+  it('should support create new custom field', () => {
+    const name = 'New Custom Field'
+    const newCustomField = { id: 101, name: 'New Custom Field' }
+    const customFields: Results<CustomField> = {
+      results: [
+        {
+          id: 1,
+          name: 'Custom Field 1',
+          data_type: CustomFieldDataType.String,
+        },
+        {
+          id: 2,
+          name: 'Custom Field 2',
+          data_type: CustomFieldDataType.String,
+        },
+      ],
+      count: 2,
+      all: [1, 2],
+    }
+
+    const modalInstance = {
+      componentInstance: {
+        dialogMode: { set: jest.fn() },
+        object: { name },
+        succeeded: of(newCustomField),
+      },
+    }
+    const customFieldsListAllSpy = jest.spyOn(customFieldsService, 'listAll')
+    customFieldsListAllSpy.mockReturnValue(of(customFields))
+
+    const customFieldsSelectionModelToggleSpy = jest.spyOn(
+      component.customFieldsSelectionModel,
+      'toggle'
+    )
+
+    const modalServiceOpenSpy = jest.spyOn(modalService, 'open')
+    modalServiceOpenSpy.mockReturnValue(modalInstance as any)
+
+    component.createCustomField(name)
+
+    expect(modalServiceOpenSpy).toHaveBeenCalledWith(
+      CustomFieldEditDialogComponent,
+      { backdrop: 'static' }
+    )
+    expect(customFieldsListAllSpy).toHaveBeenCalled()
+
+    expect(customFieldsSelectionModelToggleSpy).toHaveBeenCalledWith(
+      newCustomField.id
+    )
+    expect(component.customFieldsSelectionModel.items).toEqual(
+      [{ id: null, name: 'Not assigned' }].concat(customFields.results as any)
+    )
+  })
+
+  it('should open the bulk edit custom field values dialog with correct parameters', () => {
+    let modal: NgbModalRef
+    modalService.activeInstances.subscribe((m) => (modal = m[0]))
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'documents', 'get')
+      .mockReturnValue([{ id: 3 }, { id: 4 }])
+    jest.spyOn(documentService, 'getFew').mockReturnValue(
+      of({
+        all: [3, 4],
+        count: 2,
+        results: [{ id: 3 }, { id: 4 }],
+      })
+    )
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([3, 4]))
+    fixture.detectChanges()
+    const toastServiceShowInfoSpy = jest.spyOn(toastService, 'showInfo')
+    const toastServiceShowErrorSpy = jest.spyOn(toastService, 'showError')
+    const listReloadSpy = jest.spyOn(documentListViewService, 'reload')
+
+    component.customFieldsSelectionModel.items = [
+      { id: 1, name: 'Custom Field 1', data_type: CustomFieldDataType.String },
+      { id: 2, name: 'Custom Field 2', data_type: CustomFieldDataType.String },
+    ] as any
+
+    component.setCustomFieldValues({
+      itemsToAdd: [{ id: 1 }, { id: 2 }],
+      itemsToRemove: [1],
+    } as any)
+
+    expect(modal.componentInstance.customFields.length).toEqual(2)
+    expect(modal.componentInstance.fieldsToAddIds).toEqual([1, 2])
+    expect(modal.componentInstance.selection).toEqual({ documents: [3, 4] })
+    expect(modal.componentInstance.documents).toEqual([3, 4])
+
+    modal.componentInstance.failed.emit()
+    expect(toastServiceShowErrorSpy).toHaveBeenCalled()
+    expect(listReloadSpy).not.toHaveBeenCalled()
+
+    modal.componentInstance.succeeded.emit()
+    expect(toastServiceShowInfoSpy).toHaveBeenCalled()
+    expect(listReloadSpy).toHaveBeenCalled()
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=50&ordering=-created&truncate_content=true&include_selection_data=true`
+    ) // list reload
+    httpTestingController.match(
+      `${environment.apiBaseUrl}documents/?page=1&page_size=100000&fields=id`
+    ) // listAllFilteredIds
+  })
+
+  it('should create share link bundle and enable manage callback', () => {
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'documents', 'get')
+      .mockReturnValue([{ id: 5 }, { id: 7 }] as any)
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([5, 7]))
+
+    const confirmClicked = new EventEmitter<void>()
+    const modalRef: Partial<NgbModalRef> = {
+      close: jest.fn(),
+      componentInstance: {
+        documents: [],
+        setDocuments(docs) {
+          this.documents = docs
+        },
+        confirmClicked,
+        payload: {
+          document_ids: [5, 7],
+          file_version: 'archive',
+          expiration_days: 7,
+        },
+        loading: signal(false),
+        buttonsEnabled: true,
+        copied: signal(false),
+      },
+    }
+
+    const openSpy = jest.spyOn(modalService, 'open')
+    openSpy.mockReturnValueOnce(modalRef as NgbModalRef)
+    openSpy.mockReturnValueOnce({} as NgbModalRef)
+    ;(shareLinkBundleService.createBundle as jest.Mock).mockReturnValueOnce(
+      of({ id: 42 })
+    )
+    const toastInfoSpy = jest.spyOn(toastService, 'showInfo')
+
+    component.createShareLinkBundle()
+
+    expect(openSpy).toHaveBeenNthCalledWith(
+      1,
+      ShareLinkBundleDialogComponent,
+      expect.objectContaining({ backdrop: 'static', size: 'lg' })
+    )
+
+    const dialogInstance = modalRef.componentInstance as any
+    expect(dialogInstance.documents).toEqual([{ id: 5 }, { id: 7 }])
+
+    confirmClicked.emit()
+
+    expect(shareLinkBundleService.createBundle).toHaveBeenCalledWith({
+      document_ids: [5, 7],
+      file_version: 'archive',
+      expiration_days: 7,
+    })
+    expect(dialogInstance.loading()).toBe(false)
+    expect(dialogInstance.buttonsEnabled).toBe(false)
+    expect(dialogInstance.createdBundle).toEqual({ id: 42 })
+    expect(typeof dialogInstance.onOpenManage).toBe('function')
+    expect(toastInfoSpy).toHaveBeenCalledWith(
+      $localize`Share link bundle creation requested.`
+    )
+
+    dialogInstance.onOpenManage()
+    expect(modalRef.close).toHaveBeenCalled()
+    expect(openSpy).toHaveBeenNthCalledWith(
+      2,
+      ShareLinkBundleManageDialogComponent,
+      expect.objectContaining({ backdrop: 'static', size: 'lg' })
+    )
+    openSpy.mockRestore()
+  })
+
+  it('should handle share link bundle creation errors', () => {
+    jest.spyOn(permissionsService, 'currentUserCan').mockReturnValue(true)
+    jest
+      .spyOn(documentListViewService, 'documents', 'get')
+      .mockReturnValue([{ id: 9 }] as any)
+    jest
+      .spyOn(documentListViewService, 'selected', 'get')
+      .mockReturnValue(new Set([9]))
+
+    const confirmClicked = new EventEmitter<void>()
+    const modalRef: Partial<NgbModalRef> = {
+      componentInstance: {
+        documents: [],
+        setDocuments(docs) {
+          this.documents = docs
+        },
+        confirmClicked,
+        payload: {
+          document_ids: [9],
+          file_version: 'original',
+          expiration_days: null,
+        },
+        loading: signal(false),
+        buttonsEnabled: true,
+      },
+    }
+
+    const openSpy = jest
+      .spyOn(modalService, 'open')
+      .mockReturnValue(modalRef as NgbModalRef)
+    ;(shareLinkBundleService.createBundle as jest.Mock).mockReturnValueOnce(
+      throwError(() => new Error('bundle failure'))
+    )
+    const toastErrorSpy = jest.spyOn(toastService, 'showError')
+
+    component.createShareLinkBundle()
+
+    const dialogInstance = modalRef.componentInstance as any
+    confirmClicked.emit()
+
+    expect(toastErrorSpy).toHaveBeenCalledWith(
+      $localize`Share link bundle creation is not available yet.`,
+      expect.any(Error)
+    )
+    expect(dialogInstance.loading()).toBe(false)
+    expect(dialogInstance.buttonsEnabled).toBe(true)
+    openSpy.mockRestore()
+  })
+
+  it('should open share link bundle management dialog', () => {
+    const openSpy = jest.spyOn(modalService, 'open')
+    component.manageShareLinkBundles()
+    expect(openSpy).toHaveBeenCalledWith(
+      ShareLinkBundleManageDialogComponent,
+      expect.objectContaining({ backdrop: 'static', size: 'lg' })
+    )
+    openSpy.mockRestore()
+  })
+})

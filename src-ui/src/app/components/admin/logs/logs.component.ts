@@ -1,0 +1,168 @@
+import { CommonModule } from '@angular/common'
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  inject,
+  signal,
+} from '@angular/core'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
+import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap'
+import { Subject, debounceTime, filter, takeUntil, timer } from 'rxjs'
+import { LogService } from 'src/app/services/rest/log.service'
+import { PageHeaderComponent } from '../../common/page-header/page-header.component'
+import { LoadingComponentWithPermissions } from '../../loading-component/loading.component'
+
+@Component({
+  selector: 'pngx-logs',
+  templateUrl: './logs.component.html',
+  styleUrls: ['./logs.component.scss'],
+  imports: [
+    PageHeaderComponent,
+    NgbNavModule,
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
+})
+export class LogsComponent
+  extends LoadingComponentWithPermissions
+  implements OnInit, OnDestroy
+{
+  private logService = inject(LogService)
+  private changedetectorRef = inject(ChangeDetectorRef)
+
+  readonly logs = signal<Array<{ message: string; level: number }>>([])
+
+  readonly logFiles = signal<string[]>([])
+
+  readonly activeLog = signal<string>(undefined)
+
+  readonly autoRefreshEnabled = signal<boolean>(true)
+
+  readonly limit = signal<number>(5000)
+
+  readonly showJumpToBottom = signal<boolean>(false)
+
+  private readonly limitChange$ = new Subject<number>()
+
+  @ViewChild('logContainer') logContainer: ElementRef<HTMLElement>
+
+  ngOnInit(): void {
+    this.limitChange$
+      .pipe(debounceTime(300), takeUntil(this.unsubscribeNotifier))
+      .subscribe(() => this.reloadLogs())
+
+    this.logService
+      .list()
+      .pipe(takeUntil(this.unsubscribeNotifier))
+      .subscribe((result) => {
+        this.logFiles.set(result)
+        this.loading.set(false)
+        if (this.logFiles().length > 0) {
+          this.activeLog.set(this.logFiles()[0])
+          this.reloadLogs()
+        }
+        timer(5000, 5000)
+          .pipe(
+            filter(() => this.autoRefreshEnabled()),
+            takeUntil(this.unsubscribeNotifier)
+          )
+          .subscribe(() => {
+            this.reloadLogs()
+          })
+      })
+  }
+
+  ngOnDestroy(): void {
+    super.ngOnDestroy()
+  }
+
+  onLimitChange(limit: number): void {
+    this.limitChange$.next(limit)
+  }
+
+  reloadLogs() {
+    this.loading.set(true)
+    const shouldStickToBottom = this.isNearBottom()
+    this.logService
+      .get(this.activeLog(), this.limit())
+      .pipe(takeUntil(this.unsubscribeNotifier))
+      .subscribe({
+        next: (result) => {
+          this.loading.set(false)
+          const parsed = this.parseLogsWithLevel(result)
+          const hasChanges =
+            parsed.length !== this.logs().length ||
+            parsed.some((log, idx) => {
+              const current = this.logs()[idx]
+              return (
+                !current ||
+                current.message !== log.message ||
+                current.level !== log.level
+              )
+            })
+          if (hasChanges) {
+            this.logs.set(parsed)
+            if (shouldStickToBottom) {
+              this.scrollToBottom()
+            }
+            this.showJumpToBottom.set(!shouldStickToBottom)
+          }
+        },
+        error: () => {
+          this.logs.set([])
+          this.loading.set(false)
+        },
+      })
+  }
+
+  getLogLevel(log: string) {
+    if (log.indexOf('[DEBUG]') != -1) {
+      return 10
+    } else if (log.indexOf('[WARNING]') != -1) {
+      return 30
+    } else if (log.indexOf('[ERROR]') != -1) {
+      return 40
+    } else if (log.indexOf('[CRITICAL]') != -1) {
+      return 50
+    } else {
+      return 20
+    }
+  }
+
+  private parseLogsWithLevel(
+    logs: string[]
+  ): Array<{ message: string; level: number }> {
+    return logs.map((log) => ({
+      message: log,
+      level: this.getLogLevel(log),
+    }))
+  }
+
+  scrollToBottom(): void {
+    const viewport = this.logContainer?.nativeElement
+    if (!viewport) {
+      return
+    }
+    this.changedetectorRef.detectChanges()
+    viewport.scrollTop = viewport.scrollHeight
+    this.showJumpToBottom.set(false)
+  }
+
+  private isNearBottom(): boolean {
+    if (!this.logContainer?.nativeElement) return true
+    const distanceFromBottom =
+      this.logContainer.nativeElement.scrollHeight -
+      this.logContainer.nativeElement.scrollTop -
+      this.logContainer.nativeElement.clientHeight
+    return distanceFromBottom <= 40
+  }
+
+  onScroll(): void {
+    this.showJumpToBottom.set(!this.isNearBottom())
+  }
+}

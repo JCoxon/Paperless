@@ -1,0 +1,14 @@
+h3 {
+    min-height: calc(1.325rem + 0.9vw);
+
+    .badge {
+        font-size: 0.65rem;
+        line-height: 1;
+    }
+}
+
+@media (min-width: 1200px) {
+    h3 {
+        min-height: 2.8rem;
+    }
+}

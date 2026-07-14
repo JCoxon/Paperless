@@ -1,0 +1,406 @@
+import shutil
+from datetime import timedelta
+from pathlib import Path
+from unittest import mock
+
+import pytest
+from django.conf import settings
+from django.test import TestCase
+from django.test import override_settings
+from django.utils import timezone
+
+from documents import tasks
+from documents.models import Correspondent
+from documents.models import Document
+from documents.models import DocumentType
+from documents.models import Tag
+from documents.sanity_checker import SanityCheckFailedException
+from documents.sanity_checker import SanityCheckMessages
+from documents.tests.test_classifier import dummy_preprocess
+from documents.tests.utils import DirectoriesMixin
+from documents.tests.utils import FileSystemAssertsMixin
+
+
+@pytest.mark.django_db
+class TestIndexOptimize:
+    def test_index_optimize(self) -> None:
+        """Index optimization task must execute without error (Tantivy handles optimization automatically)."""
+        tasks.index_optimize()
+
+
+class TestClassifier(DirectoriesMixin, FileSystemAssertsMixin, TestCase):
+    @mock.patch("documents.tasks.load_classifier")
+    def test_train_classifier_no_auto_matching(self, load_classifier) -> None:
+        tasks.train_classifier()
+        load_classifier.assert_not_called()
+
+    @mock.patch("documents.tasks.load_classifier")
+    def test_train_classifier_with_auto_tag(self, load_classifier) -> None:
+        load_classifier.return_value = None
+        Tag.objects.create(matching_algorithm=Tag.MATCH_AUTO, name="test")
+        with self.assertRaises(ValueError):
+            tasks.train_classifier()
+        load_classifier.assert_called_once()
+        self.assertIsNotFile(settings.MODEL_FILE)
+
+    @mock.patch("documents.tasks.load_classifier")
+    def test_train_classifier_with_auto_type(self, load_classifier) -> None:
+        load_classifier.return_value = None
+        DocumentType.objects.create(matching_algorithm=Tag.MATCH_AUTO, name="test")
+        with self.assertRaises(ValueError):
+            tasks.train_classifier()
+        load_classifier.assert_called_once()
+        self.assertIsNotFile(settings.MODEL_FILE)
+
+    @mock.patch("documents.tasks.load_classifier")
+    def test_train_classifier_with_auto_correspondent(self, load_classifier) -> None:
+        load_classifier.return_value = None
+        Correspondent.objects.create(matching_algorithm=Tag.MATCH_AUTO, name="test")
+        with self.assertRaises(ValueError):
+            tasks.train_classifier()
+        load_classifier.assert_called_once()
+        self.assertIsNotFile(settings.MODEL_FILE)
+
+    def test_train_classifier(self) -> None:
+        c = Correspondent.objects.create(matching_algorithm=Tag.MATCH_AUTO, name="test")
+        doc = Document.objects.create(correspondent=c, content="test", title="test")
+        self.assertIsNotFile(settings.MODEL_FILE)
+
+        with mock.patch(
+            "documents.classifier.DocumentClassifier.preprocess_content",
+        ) as pre_proc_mock:
+            pre_proc_mock.side_effect = dummy_preprocess
+
+            tasks.train_classifier()
+            self.assertIsFile(settings.MODEL_FILE)
+            mtime = Path(settings.MODEL_FILE).stat().st_mtime
+
+            tasks.train_classifier()
+            self.assertIsFile(settings.MODEL_FILE)
+            mtime2 = Path(settings.MODEL_FILE).stat().st_mtime
+            self.assertEqual(mtime, mtime2)
+
+            doc.content = "test2"
+            doc.save()
+            tasks.train_classifier()
+            self.assertIsFile(settings.MODEL_FILE)
+            mtime3 = Path(settings.MODEL_FILE).stat().st_mtime
+            self.assertNotEqual(mtime2, mtime3)
+
+
+@pytest.mark.django_db
+class TestSanityCheck:
+    @pytest.fixture
+    def mock_check_sanity(self, mocker) -> mock.MagicMock:
+        return mocker.patch("documents.tasks.sanity_checker.check_sanity")
+
+    def test_sanity_check_success(self, mock_check_sanity: mock.MagicMock) -> None:
+        mock_check_sanity.return_value = SanityCheckMessages()
+        assert tasks.sanity_check() == "No issues detected."
+        mock_check_sanity.assert_called_once()
+
+    def test_sanity_check_error_raises(
+        self,
+        mock_check_sanity: mock.MagicMock,
+        sample_doc: Document,
+    ) -> None:
+        messages = SanityCheckMessages()
+        messages.error(sample_doc.pk, "some error")
+        mock_check_sanity.return_value = messages
+        with pytest.raises(SanityCheckFailedException):
+            tasks.sanity_check()
+        mock_check_sanity.assert_called_once()
+
+    def test_sanity_check_error_no_raise(
+        self,
+        mock_check_sanity: mock.MagicMock,
+        sample_doc: Document,
+    ) -> None:
+        messages = SanityCheckMessages()
+        messages.error(sample_doc.pk, "some error")
+        mock_check_sanity.return_value = messages
+        result = tasks.sanity_check(raise_on_error=False)
+        assert "1 document(s) with errors" in result
+        assert "Check logs for details." in result
+        mock_check_sanity.assert_called_once()
+
+    def test_sanity_check_warning_only(
+        self,
+        mock_check_sanity: mock.MagicMock,
+    ) -> None:
+        messages = SanityCheckMessages()
+        messages.warning(None, "extra file")
+        mock_check_sanity.return_value = messages
+        result = tasks.sanity_check()
+        assert result == "1 global warning(s) found."
+        mock_check_sanity.assert_called_once()
+
+    def test_sanity_check_info_only(
+        self,
+        mock_check_sanity: mock.MagicMock,
+        sample_doc: Document,
+    ) -> None:
+        messages = SanityCheckMessages()
+        messages.info(sample_doc.pk, "some info")
+        mock_check_sanity.return_value = messages
+        result = tasks.sanity_check()
+        assert result == "1 document(s) with infos found."
+        mock_check_sanity.assert_called_once()
+
+    def test_sanity_check_errors_warnings_and_infos(
+        self,
+        mock_check_sanity: mock.MagicMock,
+        sample_doc: Document,
+    ) -> None:
+        messages = SanityCheckMessages()
+        messages.error(sample_doc.pk, "broken")
+        messages.warning(sample_doc.pk, "odd")
+        messages.info(sample_doc.pk, "fyi")
+        messages.warning(None, "extra file")
+        mock_check_sanity.return_value = messages
+        result = tasks.sanity_check(raise_on_error=False)
+        assert "1 document(s) with errors" in result
+        assert "1 document(s) with warnings" in result
+        assert "1 document(s) with infos" in result
+        assert "1 global warning(s)" in result
+        assert "Check logs for details." in result
+        mock_check_sanity.assert_called_once()
+
+
+class TestBulkUpdate(DirectoriesMixin, TestCase):
+    def test_bulk_update_documents(self) -> None:
+        doc1 = Document.objects.create(
+            title="test",
+            content="my document",
+            checksum="wow",
+            added=timezone.now(),
+            created=timezone.now(),
+            modified=timezone.now(),
+        )
+
+        tasks.bulk_update_documents([doc1.pk])
+
+
+class TestEmptyTrashTask(DirectoriesMixin, FileSystemAssertsMixin, TestCase):
+    """
+    GIVEN:
+        - Existing document in trash
+    WHEN:
+        - Empty trash task is called without doc_ids
+    THEN:
+        - Document is only deleted if it has been in trash for more than delay (default 30 days)
+    """
+
+    def test_empty_trash(self) -> None:
+        doc = Document.objects.create(
+            title="test",
+            content="my document",
+            checksum="wow",
+            added=timezone.now(),
+            created=timezone.now(),
+            modified=timezone.now(),
+        )
+
+        doc.delete()
+        self.assertEqual(Document.global_objects.count(), 1)
+        self.assertEqual(Document.objects.count(), 0)
+        tasks.empty_trash()
+        self.assertEqual(Document.global_objects.count(), 1)
+
+        doc.deleted_at = timezone.now() - timedelta(days=31)
+        doc.save()
+
+        tasks.empty_trash()
+        self.assertEqual(Document.global_objects.count(), 0)
+
+
+@override_settings(ARCHIVE_FILE_GENERATION="always")
+class TestUpdateContent(DirectoriesMixin, TestCase):
+    def test_update_content_maybe_archive_file(self) -> None:
+        """
+        GIVEN:
+            - Existing document with archive file
+        WHEN:
+            - Update content task is called
+        THEN:
+            - Document is reprocessed, content and checksum are updated
+        """
+        sample1 = self.dirs.scratch_dir / "sample.pdf"
+        shutil.copy(
+            Path(__file__).parent
+            / "samples"
+            / "documents"
+            / "originals"
+            / "0000001.pdf",
+            sample1,
+        )
+        sample1_archive = self.dirs.archive_dir / "sample_archive.pdf"
+        shutil.copy(
+            Path(__file__).parent
+            / "samples"
+            / "documents"
+            / "originals"
+            / "0000001.pdf",
+            sample1_archive,
+        )
+        doc = Document.objects.create(
+            title="test",
+            content="my document",
+            checksum="wow",
+            archive_checksum="wow",
+            filename=sample1,
+            mime_type="application/pdf",
+            archive_filename=sample1_archive,
+        )
+
+        tasks.update_document_content_maybe_archive_file(doc.pk)
+        self.assertNotEqual(Document.objects.get(pk=doc.pk).content, "test")
+        self.assertNotEqual(Document.objects.get(pk=doc.pk).archive_checksum, "wow")
+
+    def test_update_content_maybe_archive_file_no_archive(self) -> None:
+        """
+        GIVEN:
+            - Existing document without archive file
+        WHEN:
+            - Update content task is called
+        THEN:
+            - Document is reprocessed, content is updated
+        """
+        sample1 = self.dirs.scratch_dir / "sample.pdf"
+        shutil.copy(
+            Path(__file__).parent
+            / "samples"
+            / "documents"
+            / "originals"
+            / "0000001.pdf",
+            sample1,
+        )
+        doc = Document.objects.create(
+            title="test",
+            content="my document",
+            checksum="wow",
+            filename=sample1,
+            mime_type="application/pdf",
+        )
+
+        tasks.update_document_content_maybe_archive_file(doc.pk)
+        self.assertNotEqual(Document.objects.get(pk=doc.pk).content, "test")
+
+
+class TestAIIndex(DirectoriesMixin, TestCase):
+    @override_settings(
+        AI_ENABLED=True,
+        LLM_EMBEDDING_BACKEND="huggingface",
+    )
+    def test_ai_index_success(self) -> None:
+        """
+        GIVEN:
+            - Document exists, AI is enabled, llm index backend is set
+        WHEN:
+            - llmindex_index task is called
+        THEN:
+            - update_llm_index is called and its result is returned
+        """
+        Document.objects.create(
+            title="test",
+            content="my document",
+            checksum="wow",
+        )
+        # lazy-loaded so mock the actual function
+        with mock.patch("paperless_ai.indexing.update_llm_index") as update_llm_index:
+            update_llm_index.return_value = "LLM index updated successfully."
+            result = tasks.llmindex_index()
+            update_llm_index.assert_called_once()
+            self.assertEqual(result, "LLM index updated successfully.")
+
+    @override_settings(
+        AI_ENABLED=True,
+        LLM_EMBEDDING_BACKEND="huggingface",
+    )
+    def test_ai_index_failure(self) -> None:
+        """
+        GIVEN:
+            - Document exists, AI is enabled, llm index backend is set
+        WHEN:
+            - llmindex_index task is called and update_llm_index raises an exception
+        THEN:
+            - the exception propagates to the caller
+        """
+        Document.objects.create(
+            title="test",
+            content="my document",
+            checksum="wow",
+        )
+        # lazy-loaded so mock the actual function
+        with mock.patch("paperless_ai.indexing.update_llm_index") as update_llm_index:
+            update_llm_index.side_effect = Exception("LLM index update failed.")
+            with self.assertRaisesRegex(Exception, "LLM index update failed."):
+                tasks.llmindex_index()
+            update_llm_index.assert_called_once()
+
+    def test_update_document_in_llm_index(self) -> None:
+        """
+        GIVEN:
+            - Nothing
+        WHEN:
+            - update_document_in_llm_index task is called
+        THEN:
+            - llm_index_add_or_update_document is called
+        """
+        doc = Document.objects.create(
+            title="test",
+            content="my document",
+            checksum="wow",
+        )
+        with mock.patch(
+            "documents.tasks.llm_index_add_or_update_document",
+        ) as llm_index_add_or_update_document:
+            tasks.update_document_in_llm_index(doc)
+            llm_index_add_or_update_document.assert_called_once_with(doc)
+
+    def test_remove_document_from_llm_index(self) -> None:
+        """
+        GIVEN:
+            - Nothing
+        WHEN:
+            - remove_document_from_llm_index task is called
+        THEN:
+            - llm_index_remove_document is called
+        """
+        doc = Document.objects.create(
+            title="test",
+            content="my document",
+            checksum="wow",
+        )
+        with mock.patch(
+            "documents.tasks.llm_index_remove_document",
+        ) as llm_index_remove_document:
+            tasks.remove_document_from_llm_index(doc)
+            llm_index_remove_document.assert_called_once_with(doc)
+
+    @override_settings(AI_ENABLED=True, LLM_EMBEDDING_BACKEND="huggingface")
+    def test_bulk_update_does_not_enqueue_per_doc_llm_tasks(self) -> None:
+        """bulk_update_documents must not enqueue a per-document LLM task for each document.
+
+        The bulk path calls update_llm_index once at the end; per-doc tasks would
+        be redundant work amplification.
+        """
+        docs = [
+            Document.objects.create(
+                title=f"doc{i}",
+                content="content",
+                checksum=f"checksum{i}",
+            )
+            for i in range(3)
+        ]
+        with (
+            mock.patch(
+                "documents.tasks.update_document_in_llm_index",
+            ) as update_document_in_llm_index,
+            mock.patch(
+                "documents.tasks.update_llm_index",
+            ) as update_llm_index,
+        ):
+            tasks.bulk_update_documents([doc.pk for doc in docs])
+            self.assertEqual(update_document_in_llm_index.apply_async.call_count, 0)
+            update_llm_index.assert_called_once()

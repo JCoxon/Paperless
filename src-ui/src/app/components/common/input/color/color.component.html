@@ -1,0 +1,28 @@
+<div class="mb-3">
+  @if (title) {
+    <label class="form-label" [for]="inputId">{{title}}</label>
+  }
+
+  <div class="input-group" [class.is-invalid]="error">
+    <button type="button" class="input-group-text" [style.background-color]="value" (click)="colorPicker.toggle()">&nbsp;&nbsp;&nbsp;</button>
+
+    <ng-template #popContent>
+      <div style="min-width: 200px;" class="pb-3">
+        <color-slider [color]="value" (onChangeComplete)="colorChanged($event.color.hex)"></color-slider>
+      </div>
+    </ng-template>
+
+    <input #inputField class="form-control" [class.is-invalid]="error" [id]="inputId" [(ngModel)]="value" (change)="onChange(value)" [autoClose]="'outside'" [ngbPopover]="popContent" #colorPicker="ngbPopover" placement="bottom" popoverClass="shadow">
+
+    <button class="btn btn-outline-secondary" type="button" (click)="randomize()">
+      <i-bs name="dice5"></i-bs>
+    </button>
+
+  </div>
+  @if (hint) {
+    <small class="form-text text-muted">{{hint}}</small>
+  }
+  <div class="invalid-feedback">
+    {{error}}
+  </div>
+</div>

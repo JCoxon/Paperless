@@ -1,0 +1,33 @@
+<button
+  class="list-group-item list-group-item-action d-flex align-items-center p-2 border-top-0 border-start-0 border-end-0 border-bottom"
+  [class.opacity-50]="opacifyCount && !hideCount && currentCount === 0"
+  role="menuitem"
+  (click)="toggleItem($event)"
+  [disabled]="disabled">
+  <div class="selected-icon me-1">
+    @if (isChecked()) {
+      <i-bs width="1em" height="1em" name="check"></i-bs>
+    }
+    @if (isPartiallyChecked()) {
+      <i-bs width="1em" height="1em" name="dash"></i-bs>
+    }
+    @if (isExcluded()) {
+      <i-bs width="1em" height="1em" name="x"></i-bs>
+    }
+  </div>
+  <div class="me-1 name-cell" [style.--depth]="isTag ? getDepth() + 1 : 1">
+    @if (isTag && getDepth() > 0) {
+      <div class="indicator"></div>
+    }
+    <div>
+      @if (isTag) {
+        <pngx-tag [tag]="item" [clickable]="false"></pngx-tag>
+      } @else {
+        <small>{{item.name}}</small>
+      }
+    </div>
+  </div>
+  @if (!hideCount) {
+    <div class="badge bg-light text-dark rounded-pill ms-auto me-1">{{currentCount}}</div>
+  }
+</button>

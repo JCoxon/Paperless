@@ -1,0 +1,28 @@
+::ng-deep .ng-select-container .ng-value-container {
+    overflow: hidden;
+
+    .ng-value {
+        background-color: transparent !important;
+        border-color: transparent !important;
+    }
+}
+
+.paperless-input-select.disabled {
+    --bs-btn-disabled-border-color: transparent;
+    ::ng-deep ng-select {
+        .ng-select-container {
+            div, .ng-arrow-wrapper, input {
+                cursor: not-allowed;
+            }
+            background-color: var(--pngx-bg-disabled) !important;
+        }
+    }
+}
+
+i-bs {
+    cursor: pointer;
+}
+
+.badge {
+    font-size: .75rem;
+}

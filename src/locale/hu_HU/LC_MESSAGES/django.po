@@ -1,0 +1,2406 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: paperless-ngx\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-11 23:04+0000\n"
+"PO-Revision-Date: 2026-07-11 23:06\n"
+"Last-Translator: \n"
+"Language-Team: Hungarian\n"
+"Language: hu_HU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: paperless-ngx\n"
+"X-Crowdin-Project-ID: 500308\n"
+"X-Crowdin-Language: hu\n"
+"X-Crowdin-File: /dev/src/locale/en_US/LC_MESSAGES/django.po\n"
+"X-Crowdin-File-ID: 14\n"
+
+#: documents/apps.py:8
+msgid "Documents"
+msgstr "Dokumentumok"
+
+#: documents/filters.py:464
+msgid "Value must be valid JSON."
+msgstr "Érvényes JSON érték szükséges."
+
+#: documents/filters.py:483
+msgid "Invalid custom field query expression"
+msgstr "Érvénytelen egyéni mező lekérdezési kifejezés"
+
+#: documents/filters.py:493
+msgid "Invalid expression list. Must be nonempty."
+msgstr "Érvénytelen kifejezéslista. Nem lehet üres."
+
+#: documents/filters.py:514
+msgid "Invalid logical operator {op!r}"
+msgstr "Érvénytelen logikai operátor {op!r}"
+
+#: documents/filters.py:528
+msgid "Maximum number of query conditions exceeded."
+msgstr "Maximum lekérdezési feltételszám átlépve."
+
+#: documents/filters.py:592
+msgid "{name!r} is not a valid custom field."
+msgstr "{name!r} nem érvényes egyéni mező."
+
+#: documents/filters.py:629
+msgid "{data_type} does not support query expr {expr!r}."
+msgstr "A(z) {data_type} nem támogatja a {expr!r} kifejezés lekérdezést."
+
+#: documents/filters.py:744 documents/models.py:136
+msgid "Maximum nesting depth exceeded."
+msgstr "Maximum beágyazási mélység túllépve."
+
+#: documents/filters.py:1052
+msgid "Custom field not found"
+msgstr "Az egyéni mező nem található"
+
+#: documents/models.py:39 documents/models.py:916 documents/models.py:964
+msgid "owner"
+msgstr "tulajdonos"
+
+#: documents/models.py:56 documents/models.py:1256
+msgid "None"
+msgstr "Egyik sem"
+
+#: documents/models.py:57 documents/models.py:1257
+msgid "Any word"
+msgstr "Bármely szó"
+
+#: documents/models.py:58 documents/models.py:1258
+msgid "All words"
+msgstr "Minden szó"
+
+#: documents/models.py:59 documents/models.py:1259
+msgid "Exact match"
+msgstr "Pontos egyezés"
+
+#: documents/models.py:60 documents/models.py:1260
+msgid "Regular expression"
+msgstr "Reguláris kifejezés"
+
+#: documents/models.py:61 documents/models.py:1261
+msgid "Fuzzy word"
+msgstr "Fuzzy szó"
+
+#: documents/models.py:62
+msgid "Automatic"
+msgstr "Automatikus"
+
+#: documents/models.py:65 documents/models.py:538 documents/models.py:1839
+#: paperless_mail/models.py:23 paperless_mail/models.py:143
+msgid "name"
+msgstr "név"
+
+#: documents/models.py:67 documents/models.py:1325
+msgid "match"
+msgstr "egyezés"
+
+#: documents/models.py:70 documents/models.py:1328
+msgid "matching algorithm"
+msgstr "megfeleltető algoritmus"
+
+#: documents/models.py:75 documents/models.py:1333
+msgid "is insensitive"
+msgstr "nagy- és kisbetűre érzéketlen"
+
+#: documents/models.py:98 documents/models.py:166
+msgid "correspondent"
+msgstr "partner"
+
+#: documents/models.py:99
+msgid "correspondents"
+msgstr "partnerek"
+
+#: documents/models.py:103
+msgid "color"
+msgstr "szín"
+
+#: documents/models.py:108
+msgid "is inbox tag"
+msgstr "a bejövő címke"
+
+#: documents/models.py:111
+msgid "Marks this tag as an inbox tag: All newly consumed documents will be tagged with inbox tags."
+msgstr "Ezt a címkét bejövő címkének jelöli: Minden újonnan bevitt dokumentumot bejövő címkejelöléssel lát el."
+
+#: documents/models.py:117
+msgid "tag"
+msgstr "címke"
+
+#: documents/models.py:118 documents/models.py:213
+msgid "tags"
+msgstr "címkék"
+
+#: documents/models.py:124
+msgid "Cannot set itself as parent."
+msgstr "Nem állíthatja be magát szülőként."
+
+#: documents/models.py:126
+msgid "Cannot set parent to a descendant."
+msgstr "Nem lehet szülőt beállítani egy leszármazotthoz."
+
+#: documents/models.py:143 documents/models.py:186
+msgid "document type"
+msgstr "dokumentumtípus"
+
+#: documents/models.py:144
+msgid "document types"
+msgstr "dokumentumtípusok"
+
+#: documents/models.py:149
+msgid "path"
+msgstr "útvonal"
+
+#: documents/models.py:153 documents/models.py:175
+msgid "storage path"
+msgstr "tárhelyelérési útvonal"
+
+#: documents/models.py:154
+msgid "storage paths"
+msgstr "tárhelyelérési útvonalak"
+
+#: documents/models.py:178
+msgid "title"
+msgstr "cím"
+
+#: documents/models.py:190 documents/models.py:830
+msgid "content"
+msgstr "tartalom"
+
+#: documents/models.py:193
+msgid "The raw, text-only data of the document. This field is primarily used for searching."
+msgstr "A dokumentum nyers, csak szöveges adatai. Ezt a mezőt elsősorban keresésre használják."
+
+#: documents/models.py:207
+msgid "mime type"
+msgstr "mime típus"
+
+#: documents/models.py:217
+msgid "checksum"
+msgstr "MD5 ellenőrzőkód"
+
+#: documents/models.py:220
+msgid "The checksum of the original document."
+msgstr "Az eredeti dokumentum MD5 ellenőrzőkódja."
+
+#: documents/models.py:224
+msgid "archive checksum"
+msgstr "archívum MD5 ellenőrzőkódja"
+
+#: documents/models.py:229
+msgid "The checksum of the archived document."
+msgstr "Az archivált dokumentum MD5 ellenőrzőkódja."
+
+#: documents/models.py:233
+msgid "page count"
+msgstr "oldalak száma"
+
+#: documents/models.py:240
+msgid "The number of pages of the document."
+msgstr "A dokumentum oldalainak száma."
+
+#: documents/models.py:245 documents/models.py:836 documents/models.py:874
+#: documents/models.py:936 documents/models.py:1064 documents/models.py:1123
+msgid "created"
+msgstr "létrehozva"
+
+#: documents/models.py:251
+msgid "modified"
+msgstr "módosítva"
+
+#: documents/models.py:258
+msgid "added"
+msgstr "hozzáadva"
+
+#: documents/models.py:265
+msgid "filename"
+msgstr "fájlnév"
+
+#: documents/models.py:271
+msgid "Current filename in storage"
+msgstr "Aktuális fájlnév a tárhelyen"
+
+#: documents/models.py:275
+msgid "archive filename"
+msgstr "archívum fájlnév"
+
+#: documents/models.py:281
+msgid "Current archive filename in storage"
+msgstr "Aktuális archívum fájlnév a tárhelyen"
+
+#: documents/models.py:285
+msgid "original filename"
+msgstr "eredeti fájlnév"
+
+#: documents/models.py:291
+msgid "The original name of the file when it was uploaded"
+msgstr "A fájl eredeti neve a feltöltéskor"
+
+#: documents/models.py:298
+msgid "archive serial number"
+msgstr "archívum sorozatszáma"
+
+#: documents/models.py:308
+msgid "The position of this document in your physical document archive."
+msgstr "A dokumentum helye a fizikai dokumentumarchívumban."
+
+#: documents/models.py:318
+msgid "root document for this version"
+msgstr "a példány alapdokumentuma"
+
+#: documents/models.py:322
+msgid "version index"
+msgstr "példány index"
+
+#: documents/models.py:326
+msgid "Index of this version within the root document."
+msgstr "A példány indexe az alapdokumentumon belül."
+
+#: documents/models.py:330
+msgid "version label"
+msgstr "példány elnevezés"
+
+#: documents/models.py:334
+msgid "Optional short label for a document version."
+msgstr "Opcionális rövid név dokumentumpéldányhoz."
+
+#: documents/models.py:339 documents/models.py:847 documents/models.py:901
+#: documents/models.py:1882
+msgid "document"
+msgstr "dokumentum"
+
+#: documents/models.py:340 documents/models.py:1007
+msgid "documents"
+msgstr "dokumentumok"
+
+#: documents/models.py:519
+msgid "Table"
+msgstr "Táblázat"
+
+#: documents/models.py:520
+msgid "Small Cards"
+msgstr "Kis kártyák"
+
+#: documents/models.py:521
+msgid "Large Cards"
+msgstr "Nagy kártyák"
+
+#: documents/models.py:524
+msgid "Title"
+msgstr "Cím"
+
+#: documents/models.py:525 documents/models.py:746 documents/models.py:1277
+msgid "Created"
+msgstr "Létrehozva"
+
+#: documents/models.py:526 documents/models.py:1276
+msgid "Added"
+msgstr "Hozzáadva"
+
+#: documents/models.py:527
+msgid "Tags"
+msgstr "Címkék"
+
+#: documents/models.py:528
+msgid "Correspondent"
+msgstr "Partner"
+
+#: documents/models.py:529
+msgid "Document Type"
+msgstr "Dokumentum típus"
+
+#: documents/models.py:530
+msgid "Storage Path"
+msgstr "Tárhelyelérési útvonal"
+
+#: documents/models.py:531
+msgid "Note"
+msgstr "Megjegyzés"
+
+#: documents/models.py:532
+msgid "Owner"
+msgstr "Tulajdonos"
+
+#: documents/models.py:533
+msgid "Shared"
+msgstr "Megosztva"
+
+#: documents/models.py:534
+msgid "ASN"
+msgstr "ASN"
+
+#: documents/models.py:535
+msgid "Pages"
+msgstr "Oldalak"
+
+#: documents/models.py:541
+msgid "sort field"
+msgstr "mező szerinti rendezés"
+
+#: documents/models.py:546
+msgid "sort reverse"
+msgstr "fordított rendezés"
+
+#: documents/models.py:549
+msgid "View page size"
+msgstr "Oldalszám mutatása"
+
+#: documents/models.py:557
+msgid "View display mode"
+msgstr "Megjelenítési mód mutatása"
+
+#: documents/models.py:564
+msgid "Document display fields"
+msgstr "Dokumentum megjelenített mezői"
+
+#: documents/models.py:571 documents/models.py:636
+msgid "saved view"
+msgstr "elmentett nézet"
+
+#: documents/models.py:572
+msgid "saved views"
+msgstr "elmentett nézetek"
+
+#: documents/models.py:580
+msgid "title contains"
+msgstr "a cím tartalmazza"
+
+#: documents/models.py:581
+msgid "content contains"
+msgstr "a szöveg tartalmazza"
+
+#: documents/models.py:582
+msgid "ASN is"
+msgstr "Az ASN"
+
+#: documents/models.py:583
+msgid "correspondent is"
+msgstr "partner"
+
+#: documents/models.py:584
+msgid "document type is"
+msgstr "dokumentum típusa"
+
+#: documents/models.py:585
+msgid "is in inbox"
+msgstr "a postaládában van"
+
+#: documents/models.py:586
+msgid "has tag"
+msgstr "címke"
+
+#: documents/models.py:587
+msgid "has any tag"
+msgstr "bármilyen címkével rendelkezik"
+
+#: documents/models.py:588
+msgid "created before"
+msgstr "létrehozva korábban mint"
+
+#: documents/models.py:589
+msgid "created after"
+msgstr "létrehozva később mint"
+
+#: documents/models.py:590
+msgid "created year is"
+msgstr "létrehozás éve"
+
+#: documents/models.py:591
+msgid "created month is"
+msgstr "létrehozás hónapja"
+
+#: documents/models.py:592
+msgid "created day is"
+msgstr "létrehozás napja"
+
+#: documents/models.py:593
+msgid "added before"
+msgstr "hozzáadva korábban mint"
+
+#: documents/models.py:594
+msgid "added after"
+msgstr "hozzáadva később mint"
+
+#: documents/models.py:595
+msgid "modified before"
+msgstr "módosítva korábban mint"
+
+#: documents/models.py:596
+msgid "modified after"
+msgstr "módosítva később mint"
+
+#: documents/models.py:597
+msgid "does not have tag"
+msgstr "nem rendelkezik címkével"
+
+#: documents/models.py:598
+msgid "does not have ASN"
+msgstr "nem rendelkezik ASN-nel"
+
+#: documents/models.py:599
+msgid "title or content contains"
+msgstr "a cím vagy a szöveg tartalmazza"
+
+#: documents/models.py:600
+msgid "fulltext query"
+msgstr "teljes szöveges lekérdezés"
+
+#: documents/models.py:601
+msgid "more like this"
+msgstr "több ilyet"
+
+#: documents/models.py:602
+msgid "has tags in"
+msgstr "címkékkel rendelkezik itt"
+
+#: documents/models.py:603
+msgid "ASN greater than"
+msgstr "ASN nagyobb mint"
+
+#: documents/models.py:604
+msgid "ASN less than"
+msgstr "ASN kisebb mint"
+
+#: documents/models.py:605
+msgid "storage path is"
+msgstr "tárhelyelérési útvonal"
+
+#: documents/models.py:606
+msgid "has correspondent in"
+msgstr "van partner itt"
+
+#: documents/models.py:607
+msgid "does not have correspondent in"
+msgstr "nincs partner itt"
+
+#: documents/models.py:608
+msgid "has document type in"
+msgstr "rendelkezik dokumentumtípussal itt"
+
+#: documents/models.py:609
+msgid "does not have document type in"
+msgstr "nem rendelkezik dokumentumtípussal itt"
+
+#: documents/models.py:610
+msgid "has storage path in"
+msgstr "van tárhelyelérési útvonala itt"
+
+#: documents/models.py:611
+msgid "does not have storage path in"
+msgstr "nincs tárhelyelérési útvonala itt"
+
+#: documents/models.py:612
+msgid "owner is"
+msgstr "a tulajdonos"
+
+#: documents/models.py:613
+msgid "has owner in"
+msgstr "van tulajdonosa itt"
+
+#: documents/models.py:614
+msgid "does not have owner"
+msgstr "nincs tulajdonosa"
+
+#: documents/models.py:615
+msgid "does not have owner in"
+msgstr "nincs tulajdonosa itt"
+
+#: documents/models.py:616
+msgid "has custom field value"
+msgstr "van egyéni mező értéke"
+
+#: documents/models.py:617
+msgid "is shared by me"
+msgstr "megosztva általam"
+
+#: documents/models.py:618
+msgid "has custom fields"
+msgstr "rendelkezik egyéni mezővel"
+
+#: documents/models.py:619
+msgid "has custom field in"
+msgstr "egyéni mezővel rendelkezik itt"
+
+#: documents/models.py:620
+msgid "does not have custom field in"
+msgstr "nem rendelkezik egyéni mezővel itt"
+
+#: documents/models.py:621
+msgid "does not have custom field"
+msgstr "nem rendelkezik egyéni mezővel"
+
+#: documents/models.py:622
+msgid "custom fields query"
+msgstr "egyéni mezős lekérdezés"
+
+#: documents/models.py:623
+msgid "created to"
+msgstr "létrehozva ide"
+
+#: documents/models.py:624
+msgid "created from"
+msgstr "létrehozva ebből"
+
+#: documents/models.py:625
+msgid "added to"
+msgstr "hozzáadva ide"
+
+#: documents/models.py:626
+msgid "added from"
+msgstr "hozzáadva ebből"
+
+#: documents/models.py:627
+msgid "mime type is"
+msgstr "mime típusa"
+
+#: documents/models.py:628
+msgid "simple title search"
+msgstr "egyszerű keresés címben"
+
+#: documents/models.py:629
+msgid "simple text search"
+msgstr "egyszerű keresés tartalomban"
+
+#: documents/models.py:639
+msgid "rule type"
+msgstr "szabálytípus"
+
+#: documents/models.py:641
+msgid "value"
+msgstr "érték"
+
+#: documents/models.py:644
+msgid "filter rule"
+msgstr "szűrési szabály"
+
+#: documents/models.py:645
+msgid "filter rules"
+msgstr "szűrési szabályok"
+
+#: documents/models.py:675 documents/models.py:930
+msgid "Pending"
+msgstr "Függőben"
+
+#: documents/models.py:676 documents/models.py:753
+msgid "Started"
+msgstr "Indítva"
+
+#: documents/models.py:677
+msgid "Success"
+msgstr "Sikeres"
+
+#: documents/models.py:678
+msgid "Failure"
+msgstr "Sikertelen"
+
+#: documents/models.py:679
+msgid "Revoked"
+msgstr "Visszavonva"
+
+#: documents/models.py:682
+msgid "Consume File"
+msgstr "Fájl beolvasása"
+
+#: documents/models.py:683
+msgid "Train Classifier"
+msgstr "Osztályozó betanítása"
+
+#: documents/models.py:684
+msgid "Sanity Check"
+msgstr "Logikai ellenőrzés"
+
+#: documents/models.py:685
+msgid "Index Optimize"
+msgstr "Index optimalizálása"
+
+#: documents/models.py:686 documents/models.py:1272
+msgid "Mail Fetch"
+msgstr "Email lehívás"
+
+#: documents/models.py:687
+msgid "LLM Index"
+msgstr "LLM index"
+
+#: documents/models.py:688
+msgid "Empty Trash"
+msgstr "Lomtár ürítése"
+
+#: documents/models.py:689
+msgid "Check Workflows"
+msgstr "Munkamenetek ellenőrzése"
+
+#: documents/models.py:690
+msgid "Bulk Update"
+msgstr "Tömeges frissítés"
+
+#: documents/models.py:691
+msgid "Reprocess Document"
+msgstr "Dokumentum újrafeldolgozás"
+
+#: documents/models.py:692
+msgid "Build Share Link"
+msgstr "Megosztási link létrehozás"
+
+#: documents/models.py:693
+msgid "Bulk Delete"
+msgstr "Tömeges törlés"
+
+#: documents/models.py:702 documents/models.py:1267
+msgid "Scheduled"
+msgstr "Beütemezve"
+
+#: documents/models.py:703 documents/models.py:1273
+msgid "Web UI"
+msgstr "Webes felhasználói felület"
+
+#: documents/models.py:704
+msgid "API Upload"
+msgstr "API feltöltés"
+
+#: documents/models.py:705
+msgid "Folder Consume"
+msgstr "Mappa feldolgozás"
+
+#: documents/models.py:706
+msgid "Email Consume"
+msgstr "E-mail feldolgozás"
+
+#: documents/models.py:707
+msgid "System"
+msgstr "Rendszer"
+
+#: documents/models.py:708
+msgid "Manual"
+msgstr "Dokumentáció"
+
+#: documents/models.py:714
+msgid "Task ID"
+msgstr "Feladat azonosítója"
+
+#: documents/models.py:715
+msgid "Celery task ID"
+msgstr "Celery feladat azonosító"
+
+#: documents/models.py:721
+msgid "Task Type"
+msgstr "Feladat típusa"
+
+#: documents/models.py:722
+msgid "The kind of work being performed"
+msgstr "A végrehajtandó munka típusa"
+
+#: documents/models.py:729
+msgid "Trigger Source"
+msgstr "Trigger forrás"
+
+#: documents/models.py:730
+msgid "What initiated this task"
+msgstr "Mi indította el a feladatot"
+
+#: documents/models.py:739
+msgid "Status"
+msgstr "Állapot"
+
+#: documents/models.py:759
+msgid "Completed"
+msgstr "Kész"
+
+#: documents/models.py:767
+msgid "Duration (seconds)"
+msgstr "Időtartam (másodperc)"
+
+#: documents/models.py:768
+msgid "Elapsed time from start to completion"
+msgstr "Eltelt idő az indulástól a befejezésig"
+
+#: documents/models.py:774
+msgid "Wait Time (seconds)"
+msgstr "Várakozás hossza (másodperc)"
+
+#: documents/models.py:775
+msgid "Time from task creation to worker pickup"
+msgstr "A feladat létrehozásától a worker indításáig eltelt idő"
+
+#: documents/models.py:782
+msgid "Input Data"
+msgstr "Beviteli adat"
+
+#: documents/models.py:783
+msgid "Structured input parameters for the task"
+msgstr "A feladat strukturált beviteli paraméterei"
+
+#: documents/models.py:789
+msgid "Result Data"
+msgstr "Eredmény adatok"
+
+#: documents/models.py:790
+msgid "Structured result data from task execution"
+msgstr "A feladatvégzés strukturált eredmény adatai"
+
+#: documents/models.py:796
+msgid "Acknowledged"
+msgstr "Visszaigazolva"
+
+#: documents/models.py:801
+msgid "Task"
+msgstr "Feladat"
+
+#: documents/models.py:802
+msgid "Tasks"
+msgstr "Feladatok"
+
+#: documents/models.py:832
+msgid "Note for the document"
+msgstr "Megjegyzés a dokumentumhoz"
+
+#: documents/models.py:856
+msgid "user"
+msgstr "felhasználó"
+
+#: documents/models.py:861
+msgid "note"
+msgstr "megjegyzés"
+
+#: documents/models.py:862
+msgid "notes"
+msgstr "megjegyzések"
+
+#: documents/models.py:870
+msgid "Archive"
+msgstr "Archívum"
+
+#: documents/models.py:871
+msgid "Original"
+msgstr "Eredeti"
+
+#: documents/models.py:882 documents/models.py:944 paperless_mail/models.py:75
+msgid "expiration"
+msgstr "lejárat"
+
+#: documents/models.py:889 documents/models.py:951
+msgid "slug"
+msgstr "slug"
+
+#: documents/models.py:921
+msgid "share link"
+msgstr "megosztási link"
+
+#: documents/models.py:922
+msgid "share links"
+msgstr "megosztási linkek"
+
+#: documents/models.py:931
+msgid "Processing"
+msgstr "Feldolgozás folyamatban"
+
+#: documents/models.py:932
+msgid "Ready"
+msgstr "Kész"
+
+#: documents/models.py:933
+msgid "Failed"
+msgstr "Sikertelen"
+
+#: documents/models.py:980
+msgid "size (bytes)"
+msgstr "méret (byte)"
+
+#: documents/models.py:986
+msgid "last error"
+msgstr "utolsó hiba"
+
+#: documents/models.py:993
+msgid "file path"
+msgstr "fájlelérési útvonal"
+
+#: documents/models.py:999
+msgid "built at"
+msgstr "készült"
+
+#: documents/models.py:1012
+msgid "share link bundle"
+msgstr "linkcsomag megosztása"
+
+#: documents/models.py:1013
+msgid "share link bundles"
+msgstr "linkcsomagok megosztása"
+
+#: documents/models.py:1016
+#, python-format
+msgid "Share link bundle %(slug)s"
+msgstr "%(slug)s linkcsomag megosztása"
+
+#: documents/models.py:1052
+msgid "String"
+msgstr "Karaktersor"
+
+#: documents/models.py:1053
+msgid "URL"
+msgstr "URL"
+
+#: documents/models.py:1054
+msgid "Date"
+msgstr "Dátum"
+
+#: documents/models.py:1055
+msgid "Boolean"
+msgstr "Boolean"
+
+#: documents/models.py:1056
+msgid "Integer"
+msgstr "Egész szám"
+
+#: documents/models.py:1057
+msgid "Float"
+msgstr "Valós szám"
+
+#: documents/models.py:1058
+msgid "Monetary"
+msgstr "Monetáris"
+
+#: documents/models.py:1059
+msgid "Document Link"
+msgstr "Dokumentum link"
+
+#: documents/models.py:1060
+msgid "Select"
+msgstr "Válassz"
+
+#: documents/models.py:1061
+msgid "Long Text"
+msgstr "Hosszú szöveg"
+
+#: documents/models.py:1073
+msgid "data type"
+msgstr "adattípus"
+
+#: documents/models.py:1080
+msgid "extra data"
+msgstr "további adatok"
+
+#: documents/models.py:1084
+msgid "Extra data for the custom field, such as select options"
+msgstr "További adatok az egyéni mezőhöz, például választható opciók"
+
+#: documents/models.py:1090
+msgid "custom field"
+msgstr "egyéni mező"
+
+#: documents/models.py:1091
+msgid "custom fields"
+msgstr "egyéni mezők"
+
+#: documents/models.py:1191
+msgid "custom field instance"
+msgstr "egyéni mező példány"
+
+#: documents/models.py:1192
+msgid "custom field instances"
+msgstr "egyéni mező példányok"
+
+#: documents/models.py:1264
+msgid "Consumption Started"
+msgstr "Beolvasás megkezdve"
+
+#: documents/models.py:1265
+msgid "Document Added"
+msgstr "Dokumentum hozzáadva"
+
+#: documents/models.py:1266
+msgid "Document Updated"
+msgstr "Dokumentum frissítve"
+
+#: documents/models.py:1270
+msgid "Consume Folder"
+msgstr "Beolvasási mappa"
+
+#: documents/models.py:1271
+msgid "Api Upload"
+msgstr "Api feltöltés"
+
+#: documents/models.py:1278
+msgid "Modified"
+msgstr "Változtatva"
+
+#: documents/models.py:1279
+msgid "Custom Field"
+msgstr "Egyéni mező"
+
+#: documents/models.py:1282
+msgid "Workflow Trigger Type"
+msgstr "Munkafolyamat-indító típusa"
+
+#: documents/models.py:1294
+msgid "filter path"
+msgstr "elérési útvonal szűrő"
+
+#: documents/models.py:1299
+msgid "Only consume documents with a path that matches this if specified. Wildcards specified as * are allowed. Case insensitive."
+msgstr "Ha ez meg van adva, csak olyan dokumentumokat olvas be, amelyeknek az elérési útvonala megegyezik ezzel. A *-gal megadott helyettesítő karakterek engedélyezettek. Nagy- és kisbetűkre nem érzékeny."
+
+#: documents/models.py:1306
+msgid "filter filename"
+msgstr "fájlnév szűrő"
+
+#: documents/models.py:1311 paperless_mail/models.py:200
+msgid "Only consume documents which entirely match this filename if specified. Wildcards such as *.pdf or *invoice* are allowed. Case insensitive."
+msgstr "Ha meg van adva, csak olyan dokumentumokat dolgoz fel, amelyek teljes mértékben megfelelnek ennek a fájlnévnek. Az olyan helyettesítő karakterek, mint *.pdf vagy *számla* engedélyezettek. Nagy- és kisbetűkre nem érzékeny."
+
+#: documents/models.py:1322
+msgid "filter documents from this mail rule"
+msgstr "dokumentumok szűrése ebből az email-szabályból"
+
+#: documents/models.py:1338
+msgid "has these tag(s)"
+msgstr "címke egyezik ezekkel"
+
+#: documents/models.py:1345
+msgid "has all of these tag(s)"
+msgstr "ezen címkék mindegyikét tartalmazza"
+
+#: documents/models.py:1352
+msgid "does not have these tag(s)"
+msgstr "nem tartalmazza ezeket a címkéket"
+
+#: documents/models.py:1360
+msgid "has this document type"
+msgstr "dokumentumtípus egyezik ezzel"
+
+#: documents/models.py:1367
+msgid "has one of these document types"
+msgstr "tartalmaz egy dokumentumtípust ezekből"
+
+#: documents/models.py:1374
+msgid "does not have these document type(s)"
+msgstr "nem rendelkezik ezekkel a dokumentumtípusokkal"
+
+#: documents/models.py:1382
+msgid "has this correspondent"
+msgstr "partner egyezik ezzel"
+
+#: documents/models.py:1389
+msgid "does not have these correspondent(s)"
+msgstr "partner nem egyezik ezekkel"
+
+#: documents/models.py:1396
+msgid "has one of these correspondents"
+msgstr "tartalmaz partnert ezekből"
+
+#: documents/models.py:1404
+msgid "has this storage path"
+msgstr "tárhelyelérési útvonal egyezik ezzel"
+
+#: documents/models.py:1411
+msgid "has one of these storage paths"
+msgstr "tartalmaz tárhelyelérési útvonalat ezekből"
+
+#: documents/models.py:1418
+msgid "does not have these storage path(s)"
+msgstr "nem rendelkezik tárhelyelérési útvonallal ezekből"
+
+#: documents/models.py:1422
+msgid "filter custom field query"
+msgstr "szűrés egyéni mezős lekérdezésre"
+
+#: documents/models.py:1425
+msgid "JSON-encoded custom field query expression."
+msgstr "JSON-kódolású egyéni mező lekérdezési kifejezés."
+
+#: documents/models.py:1429
+msgid "schedule offset days"
+msgstr "ütemezéseltolás (napokban)"
+
+#: documents/models.py:1432
+msgid "The number of days to offset the schedule trigger by."
+msgstr "Azon napok száma, amennyivel az aktiválást el kell tolni."
+
+#: documents/models.py:1437
+msgid "schedule is recurring"
+msgstr "ismétlődő ütemezés"
+
+#: documents/models.py:1440
+msgid "If the schedule should be recurring."
+msgstr "Az ütemezés ismétlődésének beállítása."
+
+#: documents/models.py:1445
+msgid "schedule recurring delay in days"
+msgstr "ütemezés ismétlődésének eltolása (napokban)"
+
+#: documents/models.py:1449
+msgid "The number of days between recurring schedule triggers."
+msgstr "Az ismételt indítások között eltelt napok száma."
+
+#: documents/models.py:1454
+msgid "schedule date field"
+msgstr "ütemezési dátum mező"
+
+#: documents/models.py:1459
+msgid "The field to check for a schedule trigger."
+msgstr "A mező bejelölése aktiválja az ütemezést."
+
+#: documents/models.py:1468
+msgid "schedule date custom field"
+msgstr "ütemezési dátum egyéni mező"
+
+#: documents/models.py:1472
+msgid "workflow trigger"
+msgstr "munkafolyamat-indító feltétel"
+
+#: documents/models.py:1473
+msgid "workflow triggers"
+msgstr "munkafolyamat-indító feltételek"
+
+#: documents/models.py:1481
+msgid "email subject"
+msgstr "e-mail tárgya"
+
+#: documents/models.py:1485
+msgid "The subject of the email, can include some placeholders, see documentation."
+msgstr "Az e-mail tárgya, tartalmazhat dinamikus mezőket, lásd a dokumentációban."
+
+#: documents/models.py:1491
+msgid "email body"
+msgstr "e-mail törzse"
+
+#: documents/models.py:1494
+msgid "The body (message) of the email, can include some placeholders, see documentation."
+msgstr "Az e-mail törzse (az üzenet), tartalmazhat dinamikus mezőket, lásd a dokumentációban."
+
+#: documents/models.py:1500
+msgid "emails to"
+msgstr "e-mail címzettje"
+
+#: documents/models.py:1503
+msgid "The destination email addresses, comma separated."
+msgstr "A címzett e-mail címek, vesszővel elválasztva."
+
+#: documents/models.py:1509
+msgid "include document in email"
+msgstr "dokumentum csatolása az e-mailhez"
+
+#: documents/models.py:1520
+msgid "webhook url"
+msgstr "webhook url"
+
+#: documents/models.py:1523
+msgid "The destination URL for the notification."
+msgstr "Az értesítés cél URL-je."
+
+#: documents/models.py:1528
+msgid "use parameters"
+msgstr "paraméterek használata"
+
+#: documents/models.py:1533
+msgid "send as JSON"
+msgstr "JSON-ként küldje"
+
+#: documents/models.py:1537
+msgid "webhook parameters"
+msgstr "webhook paraméterek"
+
+#: documents/models.py:1540
+msgid "The parameters to send with the webhook URL if body not used."
+msgstr "A webhook URL-ben küldendő paraméterek, ha szövegtörzs nincs használatban."
+
+#: documents/models.py:1544
+msgid "webhook body"
+msgstr "webhook szövegtörzs"
+
+#: documents/models.py:1547
+msgid "The body to send with the webhook URL if parameters not used."
+msgstr "A webhook URL-re küldendő szövegtörzs, ha nem paraméterek vannak használatban."
+
+#: documents/models.py:1551
+msgid "webhook headers"
+msgstr "webhook fejlécek"
+
+#: documents/models.py:1554
+msgid "The headers to send with the webhook URL."
+msgstr "A webhook URL-re küldendő fejlécek."
+
+#: documents/models.py:1559
+msgid "include document in webhook"
+msgstr "dokumentum csatolása a webhookhoz"
+
+#: documents/models.py:1570
+msgid "Assignment"
+msgstr "Hozzárendelés"
+
+#: documents/models.py:1574
+msgid "Removal"
+msgstr "Eltávolítás"
+
+#: documents/models.py:1578 documents/templates/account/password_reset.html:15
+msgid "Email"
+msgstr "E-mail"
+
+#: documents/models.py:1582
+msgid "Webhook"
+msgstr "Webhook"
+
+#: documents/models.py:1586
+msgid "Password removal"
+msgstr "Jelszó eltávolítása"
+
+#: documents/models.py:1590
+msgid "Move to trash"
+msgstr "Áthelyezés a lomtárba"
+
+#: documents/models.py:1594
+msgid "Workflow Action Type"
+msgstr "Munkafolyamat művelettípus"
+
+#: documents/models.py:1599 documents/models.py:1841
+#: paperless_mail/models.py:145
+msgid "order"
+msgstr "megrendelés"
+
+#: documents/models.py:1602
+msgid "assign title"
+msgstr "cím hozzárendelése"
+
+#: documents/models.py:1606
+msgid "Assign a document title, must  be a Jinja2 template, see documentation."
+msgstr "Dokumentumcím hozzárendelése, amelynek Jinja2 sablonnak kell lennie, lásd a dokumentációt."
+
+#: documents/models.py:1614 paperless_mail/models.py:274
+msgid "assign this tag"
+msgstr "rendelje hozzá ezt a jelölőt"
+
+#: documents/models.py:1623 paperless_mail/models.py:282
+msgid "assign this document type"
+msgstr "rendelje hozzá ezt a dokumentumtípust"
+
+#: documents/models.py:1632 paperless_mail/models.py:296
+msgid "assign this correspondent"
+msgstr "rendelje hozzá ezt a partnert"
+
+#: documents/models.py:1641
+msgid "assign this storage path"
+msgstr "rendelje hozzá ezt a tárhelyelérési útvonalat"
+
+#: documents/models.py:1650
+msgid "assign this owner"
+msgstr "rendelje hozzá ezt a tulajdonost"
+
+#: documents/models.py:1657
+msgid "grant view permissions to these users"
+msgstr "adjon megtekintési engedélyeket ezeknek a felhasználóknak"
+
+#: documents/models.py:1664
+msgid "grant view permissions to these groups"
+msgstr "adjon megtekintési engedélyeket ezeknek a csoportoknak"
+
+#: documents/models.py:1671
+msgid "grant change permissions to these users"
+msgstr "adjon módosítási engedélyeket ezeknek a felhasználóknak"
+
+#: documents/models.py:1678
+msgid "grant change permissions to these groups"
+msgstr "adjon módosítási engedélyeket ezeknek a csoportoknak"
+
+#: documents/models.py:1685
+msgid "assign these custom fields"
+msgstr "rendelje hozzá ezeket az egyedi mezőket"
+
+#: documents/models.py:1689
+msgid "custom field values"
+msgstr "egyéni mező értékek"
+
+#: documents/models.py:1693
+msgid "Optional values to assign to the custom fields."
+msgstr "Opcionális egyéni mezőkhöz rendelhető értékek."
+
+#: documents/models.py:1702
+msgid "remove these tag(s)"
+msgstr "ezen címkék eltávolítása"
+
+#: documents/models.py:1707
+msgid "remove all tags"
+msgstr "minden címke eltávolítása"
+
+#: documents/models.py:1714
+msgid "remove these document type(s)"
+msgstr "ezen dokumentumtípus(ok) eltávolítása"
+
+#: documents/models.py:1719
+msgid "remove all document types"
+msgstr "minden dokumentumtípus eltávolítása"
+
+#: documents/models.py:1726
+msgid "remove these correspondent(s)"
+msgstr "ezen partner(ek) eltávolítása"
+
+#: documents/models.py:1731
+msgid "remove all correspondents"
+msgstr "minden partner eltávolítása"
+
+#: documents/models.py:1738
+msgid "remove these storage path(s)"
+msgstr "ezen tárhelyelérési útvonal(ak) eltávolítása"
+
+#: documents/models.py:1743
+msgid "remove all storage paths"
+msgstr "minden tárhelyelérési útvonal eltávolítása"
+
+#: documents/models.py:1750
+msgid "remove these owner(s)"
+msgstr "ezen tulajdonos(ok) eltávolítása"
+
+#: documents/models.py:1755
+msgid "remove all owners"
+msgstr "minden tulajdonos eltávolítása"
+
+#: documents/models.py:1762
+msgid "remove view permissions for these users"
+msgstr "megtekintési engedély megvonása ezen felhasználóktól"
+
+#: documents/models.py:1769
+msgid "remove view permissions for these groups"
+msgstr "megtekintési engedély megvonása ezen csoportoktól"
+
+#: documents/models.py:1776
+msgid "remove change permissions for these users"
+msgstr "módosítási engedély megvonása ezek felhasználóktól"
+
+#: documents/models.py:1783
+msgid "remove change permissions for these groups"
+msgstr "módosítási engedély megvonása ezen csoportoktól"
+
+#: documents/models.py:1788
+msgid "remove all permissions"
+msgstr "minden jogosultság eltávolítása"
+
+#: documents/models.py:1795
+msgid "remove these custom fields"
+msgstr "ezen egyéni mezők eltávolítása"
+
+#: documents/models.py:1800
+msgid "remove all custom fields"
+msgstr "minden egyéni mező eltávolítása"
+
+#: documents/models.py:1809
+msgid "email"
+msgstr "e-mail"
+
+#: documents/models.py:1818
+msgid "webhook"
+msgstr "webhook"
+
+#: documents/models.py:1822
+msgid "passwords"
+msgstr "jelszavak"
+
+#: documents/models.py:1826
+msgid "Passwords to try when removing PDF protection. Separate with commas or new lines."
+msgstr "A PDF-védelem eltávolításakor kipróbálandó jelszavak. Válassza el őket vesszővel vagy új sorral."
+
+#: documents/models.py:1831
+msgid "workflow action"
+msgstr "munkafolyamat művelet"
+
+#: documents/models.py:1832
+msgid "workflow actions"
+msgstr "munkafolyamat műveletek"
+
+#: documents/models.py:1847
+msgid "triggers"
+msgstr "munkafolyamat-indítók"
+
+#: documents/models.py:1854
+msgid "actions"
+msgstr "műveletek"
+
+#: documents/models.py:1857 paperless_mail/models.py:154
+msgid "enabled"
+msgstr "engedélyezve"
+
+#: documents/models.py:1868
+msgid "workflow"
+msgstr "munkafolyamat"
+
+#: documents/models.py:1872
+msgid "workflow trigger type"
+msgstr "munkafolyamat-indító típusa"
+
+#: documents/models.py:1886
+msgid "date run"
+msgstr "futtatás dátuma"
+
+#: documents/models.py:1892
+msgid "workflow run"
+msgstr "munkafolyamat futtatás"
+
+#: documents/models.py:1893
+msgid "workflow runs"
+msgstr "munkafolyamat futtatások"
+
+#: documents/serialisers.py:503 documents/serialisers.py:855
+#: documents/serialisers.py:2744 documents/views.py:297 documents/views.py:2482
+#: paperless_mail/serialisers.py:155
+msgid "Insufficient permissions."
+msgstr "Nincs jogosúltsága."
+
+#: documents/serialisers.py:691
+msgid "Invalid color."
+msgstr "Érvénytelen szín."
+
+#: documents/serialisers.py:2216
+#, python-format
+msgid "File type %(type)s not supported"
+msgstr "%(type)s fájltípus nem támogatott"
+
+#: documents/serialisers.py:2260
+#, python-format
+msgid "Custom field id must be an integer: %(id)s"
+msgstr "Az egyéni mező azonosítójának egész számnak kell lennie: %(id)s"
+
+#: documents/serialisers.py:2267
+#, python-format
+msgid "Custom field with id %(id)s does not exist"
+msgstr "A(z) %(id)s azonosítójú egyéni mező nem létezik"
+
+#: documents/serialisers.py:2284 documents/serialisers.py:2294
+msgid "Custom fields must be a list of integers or an object mapping ids to values."
+msgstr "Az egyéni mezőknek egész számok listájának vagy azonosítókat értékekhez rendelő objektumnak kell lenniük."
+
+#: documents/serialisers.py:2289
+msgid "Some custom fields don't exist or were specified twice."
+msgstr "Néhány egyéni mező nem létezik, vagy kétszer lett megadva."
+
+#: documents/serialisers.py:2436
+msgid "Invalid variable detected."
+msgstr "Érvénytelen változó észlelve."
+
+#: documents/serialisers.py:2800
+msgid "Duplicate document identifiers are not allowed."
+msgstr "A dokumentumazonosítók duplikálása nem megengedett."
+
+#: documents/serialisers.py:2830 documents/views.py:4436
+#, python-format
+msgid "Documents not found: %(ids)s"
+msgstr "Dokumentumok nem találhatók: %(ids)s"
+
+#: documents/templates/account/account_inactive.html:5
+msgid "Paperless-ngx account inactive"
+msgstr "A Paperless-ngx fiók inaktív"
+
+#: documents/templates/account/account_inactive.html:9
+msgid "Account inactive."
+msgstr "Fiók inaktív."
+
+#: documents/templates/account/account_inactive.html:14
+msgid "This account is inactive."
+msgstr "Ez a fiók inaktív."
+
+#: documents/templates/account/account_inactive.html:16
+msgid "Return to login"
+msgstr "Vissza a bejelentkezéshez"
+
+#: documents/templates/account/email/base_message.txt:1
+#, python-format
+msgid "Hello from %(site_name)s!"
+msgstr "Üdvözöl a %(site_name)s!"
+
+#: documents/templates/account/email/base_message.txt:5
+#, python-format
+msgid "Thank you for using %(site_name)s!\n"
+"%(site_domain)s"
+msgstr "Köszönjük, hogy a(z) %(site_name)s-t használta!\n"
+"%(site_domain)s"
+
+#: documents/templates/account/login.html:5
+msgid "Paperless-ngx sign in"
+msgstr "Paperless-ngx bejelentkezés"
+
+#: documents/templates/account/login.html:10
+msgid "Please sign in."
+msgstr "Kérjük, jelentkezzen be."
+
+#: documents/templates/account/login.html:12
+msgid "Don't have an account yet?"
+msgstr "Még nincs fiókod?"
+
+#: documents/templates/account/login.html:12
+#: documents/templates/account/signup.html:43
+#: documents/templates/socialaccount/signup.html:29
+msgid "Sign up"
+msgstr "Regisztráció"
+
+#: documents/templates/account/login.html:25
+#: documents/templates/account/signup.html:22
+#: documents/templates/socialaccount/signup.html:15
+msgid "Username"
+msgstr "Felhasználónév"
+
+#: documents/templates/account/login.html:26
+#: documents/templates/account/signup.html:24
+msgid "Password"
+msgstr "Jelszó"
+
+#: documents/templates/account/login.html:36
+#: documents/templates/account/signup.html:11
+#: documents/templates/mfa/authenticate.html:23
+msgid "Sign in"
+msgstr "Bejelentkezés"
+
+#: documents/templates/account/login.html:40
+msgid "Forgot your password?"
+msgstr "Elfelejtette jelszavát?"
+
+#: documents/templates/account/login.html:51
+#: documents/templates/account/signup.html:57
+msgid "or sign in via"
+msgstr "vagy lépjen be ezzel"
+
+#: documents/templates/account/password_reset.html:5
+msgid "Paperless-ngx reset password request"
+msgstr "Paperless-ngx jelszó-visszaállítási kérelem"
+
+#: documents/templates/account/password_reset.html:9
+msgid "Enter your email address below, and we'll email instructions for setting a new one."
+msgstr "Adja meg az e-mail címét, és elküldjük Önnek az új jelszó beállításához szükséges utasításokat."
+
+#: documents/templates/account/password_reset.html:12
+msgid "An error occurred. Please try again."
+msgstr "Hiba történt. Kérjük, próbálja újra."
+
+#: documents/templates/account/password_reset.html:21
+msgid "Send me instructions!"
+msgstr "Küldjenek utasításokat!"
+
+#: documents/templates/account/password_reset_done.html:5
+msgid "Paperless-ngx reset password sent"
+msgstr "Paperless-ngx jelszó visszaállítása elküldve"
+
+#: documents/templates/account/password_reset_done.html:9
+msgid "Check your inbox."
+msgstr "Ellenőrizze a postaládáját."
+
+#: documents/templates/account/password_reset_done.html:13
+msgid "We've emailed you instructions for setting your password. You should receive the email shortly!"
+msgstr "E-mailben küldtünk utasításokat a jelszó beállításához. Hamarosan megkapja az e-mailt!"
+
+#: documents/templates/account/password_reset_from_key.html:5
+msgid "Paperless-ngx reset password confirmation"
+msgstr "Paperless-ngx jelszó visszaállításának megerősítése"
+
+#: documents/templates/account/password_reset_from_key.html:9
+msgid "Set a new password."
+msgstr "Új jelszó beállítása."
+
+#: documents/templates/account/password_reset_from_key.html:15
+msgid "request a new password reset"
+msgstr "új jelszó visszaállításának kérése"
+
+#: documents/templates/account/password_reset_from_key.html:17
+msgid "New Password"
+msgstr "Új jelszó"
+
+#: documents/templates/account/password_reset_from_key.html:18
+msgid "Confirm Password"
+msgstr "Jelszó megerősítése"
+
+#: documents/templates/account/password_reset_from_key.html:28
+msgid "Change my password"
+msgstr "Jelszó módosítása"
+
+#: documents/templates/account/password_reset_from_key_done.html:5
+msgid "Paperless-ngx reset password complete"
+msgstr "Paperless-ngx jelszó visszaállítása befejeződött"
+
+#: documents/templates/account/password_reset_from_key_done.html:9
+msgid "Password reset complete."
+msgstr "Jelszó visszaállítása befejeződött."
+
+#: documents/templates/account/password_reset_from_key_done.html:14
+msgid "Your new password has been set. You can now"
+msgstr "Az új jelszót beállítottuk. Itt"
+
+#: documents/templates/account/password_reset_from_key_done.html:14
+msgid "log in"
+msgstr "jelentkezz be"
+
+#: documents/templates/account/signup.html:5
+msgid "Paperless-ngx sign up"
+msgstr "Paperless-ngx regisztráció"
+
+#: documents/templates/account/signup.html:11
+msgid "Already have an account?"
+msgstr "Már van fiókod?"
+
+#: documents/templates/account/signup.html:19
+msgid "Note: This is the first user account for this installation and will be granted superuser privileges."
+msgstr "Megjegyzés: ez az installáció után létrehozott első felhasználói fiók, ezért superuser privilégiumokkal rendelkezik majd."
+
+#: documents/templates/account/signup.html:23
+#: documents/templates/socialaccount/signup.html:16
+msgid "Email (optional)"
+msgstr "E-mail (nem kötelező)"
+
+#: documents/templates/account/signup.html:25
+msgid "Password (again)"
+msgstr "Jelszó (ismét)"
+
+#: documents/templates/index.html:61
+msgid "Paperless-ngx is loading..."
+msgstr "Paperless-ngx töltődik..."
+
+#: documents/templates/index.html:62
+msgid "Still here?! Hmm, something might be wrong."
+msgstr "Még mindig itt vagy?! Hmm, valami baj lehet."
+
+#: documents/templates/index.html:62
+msgid "Here's a link to the docs."
+msgstr "Itt egy link a dokumentumokhoz."
+
+#: documents/templates/mfa/authenticate.html:7
+msgid "Paperless-ngx Two-Factor Authentication"
+msgstr "Paperless-ngx kétlépcsős hitelesítés"
+
+#: documents/templates/mfa/authenticate.html:12
+msgid "Your account is protected by two-factor authentication. Please enter an authenticator code:"
+msgstr "A fiókod kétlépcsős hitelesítéssel védett. Kérlek add meg a hitelesítő kódot:"
+
+#: documents/templates/mfa/authenticate.html:17
+msgid "Code"
+msgstr "Kód"
+
+#: documents/templates/mfa/authenticate.html:24
+msgid "Cancel"
+msgstr "Mégse"
+
+#: documents/templates/paperless-ngx/base.html:58
+msgid "Share link was not found."
+msgstr "A megosztási link nem található."
+
+#: documents/templates/paperless-ngx/base.html:62
+msgid "Share link has expired."
+msgstr "A megosztási link lejárt."
+
+#: documents/templates/socialaccount/authentication_error.html:5
+#: documents/templates/socialaccount/login.html:5
+msgid "Paperless-ngx social account sign in"
+msgstr "Paperless-ngx belépés közösségi fiókkal"
+
+#: documents/templates/socialaccount/authentication_error.html:10
+msgid "An error occurred while attempting to login via your social network account. Back to the"
+msgstr "Hiba történt a közösségi fiókoddal történő belépés során. Vissza a"
+
+#: documents/templates/socialaccount/authentication_error.html:10
+msgid "login page"
+msgstr "bejelentkezési oldalra"
+
+#: documents/templates/socialaccount/login.html:11
+#, python-format
+msgid "You are about to connect a new third-party account from %(provider)s."
+msgstr "A %(provider)s felhasználói fiókkal fogsz kapcsolódni."
+
+#: documents/templates/socialaccount/login.html:15
+msgid "Continue"
+msgstr "Folytatás"
+
+#: documents/templates/socialaccount/signup.html:5
+msgid "Paperless-ngx social account sign up"
+msgstr "Paperless-ngx közösségi fiók regisztráció"
+
+#: documents/templates/socialaccount/signup.html:11
+#, python-format
+msgid "You are about to use your %(provider_name)s account to login."
+msgstr "A %(provider_name)s felhasználói fiókkal fogsz belépni."
+
+#: documents/templates/socialaccount/signup.html:13
+msgid "As a final step, please complete the following form:"
+msgstr "Utolsó lépésként kérjük válaszoljon az alábbi kérdésekre:"
+
+#: documents/validators.py:24
+#, python-brace-format
+msgid "Unable to parse URI {value}, missing scheme"
+msgstr "A {value} URI értelmezése sikertelen, hiányzó séma"
+
+#: documents/validators.py:29
+#, python-brace-format
+msgid "Unable to parse URI {value}, missing net location or path"
+msgstr "A {value} URI értelmezése sikertelen, hiányzó hálózati vagy elérési útvonal"
+
+#: documents/validators.py:36
+msgid "URI scheme '{parts.scheme}' is not allowed. Allowed schemes: {', '.join(allowed_schemes)}"
+msgstr "A '{parts.scheme}' séma nem engedélyezett. Engedélyezett sémák: {', '.join(allowed_schemes)}"
+
+#: documents/validators.py:45
+#, python-brace-format
+msgid "Unable to parse URI {value}"
+msgstr "A {value} URI értelmezése sikertelen"
+
+#: documents/views.py:290 documents/views.py:2479
+msgid "Invalid more_like_id"
+msgstr "Érvénytelen more_like_id"
+
+#: documents/views.py:1513
+msgid "Invalid AI configuration."
+msgstr "Érvénytelen MI konfiguráció."
+
+#: documents/views.py:1522
+msgid "AI backend request timed out."
+msgstr ""
+
+#: documents/views.py:2304 documents/views.py:2625
+msgid "Specify only one of text, title_search, query, or more_like_id."
+msgstr "A text, title_search, query, vagy more_like_id közül csak egyet adjon meg."
+
+#: documents/views.py:4448
+#, python-format
+msgid "Insufficient permissions to share document %(id)s."
+msgstr "Nincs megfelelő jogosultság a %(id)s dokumentum megosztásához."
+
+#: documents/views.py:4494
+msgid "Bundle is already being processed."
+msgstr "A csomag feldolgozása már folyamatban van."
+
+#: documents/views.py:4554
+msgid "The share link bundle is still being prepared. Please try again later."
+msgstr "A megosztási linkcsomag készítése folyamatban. Kérjük, próbálja meg később."
+
+#: documents/views.py:4564
+msgid "The share link bundle is unavailable."
+msgstr "A megosztási linkcsomag nem elérhető."
+
+#: paperless/apps.py:11
+msgid "Paperless"
+msgstr "Paperless"
+
+#: paperless/models.py:26
+msgid "pdf"
+msgstr "pdf"
+
+#: paperless/models.py:27
+msgid "pdfa"
+msgstr "pdfa"
+
+#: paperless/models.py:28
+msgid "pdfa-1"
+msgstr "pdfa-1"
+
+#: paperless/models.py:29
+msgid "pdfa-2"
+msgstr "pdfa-2"
+
+#: paperless/models.py:30
+msgid "pdfa-3"
+msgstr "pdfa-3"
+
+#: paperless/models.py:39 paperless/models.py:50
+msgid "auto"
+msgstr "auto"
+
+#: paperless/models.py:40
+msgid "force"
+msgstr "force"
+
+#: paperless/models.py:41
+msgid "redo"
+msgstr "újra"
+
+#: paperless/models.py:42
+msgid "off"
+msgstr "ki"
+
+#: paperless/models.py:51
+msgid "always"
+msgstr "mindig"
+
+#: paperless/models.py:52
+msgid "never"
+msgstr "soha"
+
+#: paperless/models.py:60
+msgid "clean"
+msgstr "clean"
+
+#: paperless/models.py:61
+msgid "clean-final"
+msgstr "clean-final"
+
+#: paperless/models.py:62
+msgid "none"
+msgstr "none"
+
+#: paperless/models.py:70
+msgid "LeaveColorUnchanged"
+msgstr "LeaveColorUnchanged"
+
+#: paperless/models.py:71
+msgid "RGB"
+msgstr "RGB"
+
+#: paperless/models.py:72
+msgid "UseDeviceIndependentColor"
+msgstr "UseDeviceIndependentColor"
+
+#: paperless/models.py:73
+msgid "Gray"
+msgstr "Szürke"
+
+#: paperless/models.py:74
+msgid "CMYK"
+msgstr "CMYK"
+
+#: paperless/models.py:78 paperless/models.py:88
+msgid "OpenAI-compatible"
+msgstr ""
+
+#: paperless/models.py:79
+msgid "Huggingface"
+msgstr "Ölelőarc"
+
+#: paperless/models.py:80 paperless/models.py:89
+msgid "Ollama"
+msgstr "Ollama"
+
+#: paperless/models.py:98
+msgid "Sets the output PDF type"
+msgstr "Beállítja a kimeneti PDF típust"
+
+#: paperless/models.py:110
+msgid "Do OCR from page 1 to this value"
+msgstr "Szövegfelismerés az elsőtől a következő oldalig"
+
+#: paperless/models.py:116
+msgid "Do OCR using these languages"
+msgstr "Szövegfelismerés nyelve"
+
+#: paperless/models.py:123
+msgid "Sets the OCR mode"
+msgstr "Szövegfelismerés módjának beállítása"
+
+#: paperless/models.py:131
+msgid "Controls archive file generation"
+msgstr "Archív fájl generálását szabályozza"
+
+#: paperless/models.py:139
+msgid "Sets image DPI fallback value"
+msgstr "Beállítja a DPI értéket, amennyiben az a fájlból hiányzik"
+
+#: paperless/models.py:146
+msgid "Controls the unpaper cleaning"
+msgstr "Beállítja az unpaper tisztítást"
+
+#: paperless/models.py:153
+msgid "Enables deskew"
+msgstr "Engedélyezi az oldalkiegyenesítést"
+
+#: paperless/models.py:156
+msgid "Enables page rotation"
+msgstr "Engedélyezi az oldalforgatást"
+
+#: paperless/models.py:161
+msgid "Sets the threshold for rotation of pages"
+msgstr "Beállítja az oldalforgatás határértékét"
+
+#: paperless/models.py:167
+msgid "Sets the maximum image size for decompression"
+msgstr "Beállítja a legnagyobb kitömörítési fájlméretet"
+
+#: paperless/models.py:173
+msgid "Sets the Ghostscript color conversion strategy"
+msgstr "Beállítja a Ghostscript színkonverziós stratégiáját"
+
+#: paperless/models.py:181
+msgid "Adds additional user arguments for OCRMyPDF"
+msgstr "További felhasználói paramétereket ad hozzá az OCRmyPDF-hez."
+
+#: paperless/models.py:190
+msgid "Application title"
+msgstr "Alkalmazás neve"
+
+#: paperless/models.py:197
+msgid "Application logo"
+msgstr "Alkalmazás logója"
+
+#: paperless/models.py:212
+msgid "Enables barcode scanning"
+msgstr "Engedélyezi a vonalkód olvasást"
+
+#: paperless/models.py:218
+msgid "Enables barcode TIFF support"
+msgstr "Engedélyezi a TIFF vonalkódokat"
+
+#: paperless/models.py:224
+msgid "Sets the barcode string"
+msgstr "Beállítja a vonalkód karaktersort"
+
+#: paperless/models.py:232
+msgid "Retains split pages"
+msgstr "Elválasztott oldalak megtartása"
+
+#: paperless/models.py:238
+msgid "Enables ASN barcode"
+msgstr "Engedélyezi az ASN vonalkódokat"
+
+#: paperless/models.py:244
+msgid "Sets the ASN barcode prefix"
+msgstr "Beállítja az ASN vonalkódok kezdőkaraktereit"
+
+#: paperless/models.py:252
+msgid "Sets the barcode upscale factor"
+msgstr "Beállítja a vonalkód felskálázási szorzóját"
+
+#: paperless/models.py:259
+msgid "Sets the barcode DPI"
+msgstr "Beállítja a vonalkód felbontását (DPI)"
+
+#: paperless/models.py:266
+msgid "Sets the maximum pages for barcode"
+msgstr "Beállítja a vonalkódok maximum oldalszámát"
+
+#: paperless/models.py:273
+msgid "Enables tag barcode"
+msgstr "Engedélyezi a vonalkód címkét"
+
+#: paperless/models.py:279
+msgid "Sets the tag barcode mapping"
+msgstr "Beállítja a vonalkódok címkék keresését"
+
+#: paperless/models.py:285
+msgid "Enables splitting on tag barcodes"
+msgstr "Engedélyezi a vonalkód-címke alapú darabolást"
+
+#: paperless/models.py:294
+msgid "Enables AI features"
+msgstr "Engedélyezi az MI funkciókat"
+
+#: paperless/models.py:300
+msgid "Sets the LLM embedding backend"
+msgstr "Beállítja az LLM-beágyazási backend-et"
+
+#: paperless/models.py:308
+msgid "Sets the LLM embedding model"
+msgstr "Beállítja az LLM-beágyazási modellt"
+
+#: paperless/models.py:315
+msgid "Sets the LLM embedding endpoint, optional"
+msgstr ""
+
+#: paperless/models.py:322
+msgid "Sets the LLM embedding chunk size"
+msgstr ""
+
+#: paperless/models.py:328
+msgid "Sets the LLM context size"
+msgstr ""
+
+#: paperless/models.py:334
+msgid "Sets the LLM backend"
+msgstr "Beállítja az LLM backend-et"
+
+#: paperless/models.py:342
+msgid "Sets the LLM model"
+msgstr "LLM modell beállítása"
+
+#: paperless/models.py:349
+msgid "Sets the LLM API key"
+msgstr "Beállítja az LLM API-kulcsot"
+
+#: paperless/models.py:356
+msgid "Sets the LLM endpoint, optional"
+msgstr "Beállítja az LLM végpontot, opcionális"
+
+#: paperless/models.py:363
+msgid "Sets the LLM output language"
+msgstr ""
+
+#: paperless/models.py:370
+msgid "Sets the LLM timeout in seconds"
+msgstr ""
+
+#: paperless/models.py:376
+msgid "paperless application settings"
+msgstr "paperless alkalmazás beállítások"
+
+#: paperless/settings/__init__.py:545
+msgid "English (US)"
+msgstr "Angol (US)"
+
+#: paperless/settings/__init__.py:546
+msgid "Arabic"
+msgstr "Arab"
+
+#: paperless/settings/__init__.py:547
+msgid "Afrikaans"
+msgstr "Afrikai"
+
+#: paperless/settings/__init__.py:548
+msgid "Belarusian"
+msgstr "Fehérorosz"
+
+#: paperless/settings/__init__.py:549
+msgid "Bulgarian"
+msgstr "Bolgár"
+
+#: paperless/settings/__init__.py:550
+msgid "Catalan"
+msgstr "Katalán"
+
+#: paperless/settings/__init__.py:551
+msgid "Czech"
+msgstr "Cseh"
+
+#: paperless/settings/__init__.py:552
+msgid "Danish"
+msgstr "Dán"
+
+#: paperless/settings/__init__.py:553
+msgid "German"
+msgstr "Német"
+
+#: paperless/settings/__init__.py:554
+msgid "Greek"
+msgstr "Görög"
+
+#: paperless/settings/__init__.py:555
+msgid "English (GB)"
+msgstr "Angol (GB)"
+
+#: paperless/settings/__init__.py:556
+msgid "Spanish"
+msgstr "Spanyol"
+
+#: paperless/settings/__init__.py:557
+msgid "Persian"
+msgstr "Perzsa"
+
+#: paperless/settings/__init__.py:558
+msgid "Finnish"
+msgstr "Finn"
+
+#: paperless/settings/__init__.py:559
+msgid "French"
+msgstr "Francia"
+
+#: paperless/settings/__init__.py:560
+msgid "Hungarian"
+msgstr "Magyar"
+
+#: paperless/settings/__init__.py:561
+msgid "Indonesian"
+msgstr "Indonéz"
+
+#: paperless/settings/__init__.py:562
+msgid "Italian"
+msgstr "Olasz"
+
+#: paperless/settings/__init__.py:563
+msgid "Japanese"
+msgstr "Japán"
+
+#: paperless/settings/__init__.py:564
+msgid "Korean"
+msgstr "Koreai"
+
+#: paperless/settings/__init__.py:565
+msgid "Luxembourgish"
+msgstr "Luxemburgi"
+
+#: paperless/settings/__init__.py:566
+msgid "Norwegian"
+msgstr "Norvég"
+
+#: paperless/settings/__init__.py:567
+msgid "Dutch"
+msgstr "Holland"
+
+#: paperless/settings/__init__.py:568
+msgid "Polish"
+msgstr "Lengyel"
+
+#: paperless/settings/__init__.py:569
+msgid "Portuguese (Brazil)"
+msgstr "Portugál (Brazília)"
+
+#: paperless/settings/__init__.py:570
+msgid "Portuguese"
+msgstr "Portugál"
+
+#: paperless/settings/__init__.py:571
+msgid "Romanian"
+msgstr "Román"
+
+#: paperless/settings/__init__.py:572
+msgid "Russian"
+msgstr "Orosz"
+
+#: paperless/settings/__init__.py:573
+msgid "Slovak"
+msgstr "Szlovák"
+
+#: paperless/settings/__init__.py:574
+msgid "Slovenian"
+msgstr "Szlovén"
+
+#: paperless/settings/__init__.py:575
+msgid "Serbian"
+msgstr "Szerb"
+
+#: paperless/settings/__init__.py:576
+msgid "Swedish"
+msgstr "Svéd"
+
+#: paperless/settings/__init__.py:577
+msgid "Turkish"
+msgstr "Török"
+
+#: paperless/settings/__init__.py:578
+msgid "Ukrainian"
+msgstr "Ukrán"
+
+#: paperless/settings/__init__.py:579
+msgid "Vietnamese"
+msgstr "Vietnámi"
+
+#: paperless/settings/__init__.py:580
+msgid "Chinese Simplified"
+msgstr "Kínai egyszerűsített"
+
+#: paperless/settings/__init__.py:581
+msgid "Chinese Traditional"
+msgstr "Tradicionális kínai"
+
+#: paperless/urls.py:429
+msgid "Paperless-ngx administration"
+msgstr "Paperless-ngx adminisztráció"
+
+#: paperless_mail/admin.py:39
+msgid "Authentication"
+msgstr "Hitelesítés"
+
+#: paperless_mail/admin.py:42
+msgid "Advanced settings"
+msgstr "Haladó beállítások"
+
+#: paperless_mail/admin.py:58
+msgid "Filter"
+msgstr "Szűrő"
+
+#: paperless_mail/admin.py:61
+msgid "Paperless will only process mails that match ALL of the filters given below."
+msgstr "A Paperless csak azokat a leveleket dolgozza fel, amelyek az alábbiakban megadott MINDEN szűrőnek megfelelnek."
+
+#: paperless_mail/admin.py:78
+msgid "Actions"
+msgstr "Műveletek"
+
+#: paperless_mail/admin.py:81
+msgid "The action applied to the mail. This action is only performed when the mail body or attachments were consumed from the mail."
+msgstr "A levélre alkalmazott művelet. Ez a művelet csak akkor kerül végrehajtásra, ha a levéltest vagy a mellékletek a levélből kerültek felhasználásra."
+
+#: paperless_mail/admin.py:89
+msgid "Metadata"
+msgstr "Metaadatok"
+
+#: paperless_mail/admin.py:92
+msgid "Assign metadata to documents consumed from this rule automatically. If you do not assign tags, types or correspondents here, paperless will still process all matching rules that you have defined."
+msgstr "Automatikusan hozzárendelhet metaadatokat a szabály által feldolgozott dokumentumokhoz. Ha itt nem rendel hozzá címkéket, típusokat vagy levelezőket, a papírmentes rendszer akkor is feldolgozza az Ön által meghatározott összes egyező szabályt."
+
+#: paperless_mail/apps.py:8
+msgid "Paperless mail"
+msgstr "Paperless E-Mail"
+
+#: paperless_mail/models.py:10
+msgid "mail account"
+msgstr "e-mail fiók"
+
+#: paperless_mail/models.py:11
+msgid "mail accounts"
+msgstr "e-mail fiókok"
+
+#: paperless_mail/models.py:14
+msgid "No encryption"
+msgstr "Nincs titkosítás"
+
+#: paperless_mail/models.py:15
+msgid "Use SSL"
+msgstr "SSL használata"
+
+#: paperless_mail/models.py:16
+msgid "Use STARTTLS"
+msgstr "STARTTLS használata"
+
+#: paperless_mail/models.py:19
+msgid "IMAP"
+msgstr "IMAP"
+
+#: paperless_mail/models.py:20
+msgid "Gmail OAuth"
+msgstr "Gmail OAuth"
+
+#: paperless_mail/models.py:21
+msgid "Outlook OAuth"
+msgstr "Outlook OAuth"
+
+#: paperless_mail/models.py:25
+msgid "IMAP server"
+msgstr "IMAP-kiszolgáló"
+
+#: paperless_mail/models.py:28
+msgid "IMAP port"
+msgstr "IMAP port"
+
+#: paperless_mail/models.py:32
+msgid "This is usually 143 for unencrypted and STARTTLS connections, and 993 for SSL connections."
+msgstr "Ez általában 143 a titkosítatlan és STARTTLS kapcsolatok esetében, és 993 az SSL kapcsolatok esetében."
+
+#: paperless_mail/models.py:38
+msgid "IMAP security"
+msgstr "IMAP biztonság"
+
+#: paperless_mail/models.py:43
+msgid "username"
+msgstr "felhasználónév"
+
+#: paperless_mail/models.py:45
+msgid "password"
+msgstr "jelszó"
+
+#: paperless_mail/models.py:47
+msgid "Is token authentication"
+msgstr "Token hitelesítés"
+
+#: paperless_mail/models.py:50
+msgid "character set"
+msgstr "karakterkészlet"
+
+#: paperless_mail/models.py:54
+msgid "The character set to use when communicating with the mail server, such as 'UTF-8' or 'US-ASCII'."
+msgstr "A levelezőszerverrel való kommunikáció során használandó karakterkészlet, például 'UTF-8' vagy 'US-ASCII'."
+
+#: paperless_mail/models.py:60
+msgid "account type"
+msgstr "fiók típusa"
+
+#: paperless_mail/models.py:66
+msgid "refresh token"
+msgstr "frissítési token"
+
+#: paperless_mail/models.py:70
+msgid "The refresh token to use for token authentication e.g. with oauth2."
+msgstr "A token hitelesítéshez használt frissítési token pl. Oauth2-vel."
+
+#: paperless_mail/models.py:79
+msgid "The expiration date of the refresh token. "
+msgstr "A frissitési token lejáratának dátuma. "
+
+#: paperless_mail/models.py:89
+msgid "mail rule"
+msgstr "levelezési szabály"
+
+#: paperless_mail/models.py:90
+msgid "mail rules"
+msgstr "levelezési szabályok"
+
+#: paperless_mail/models.py:104 paperless_mail/models.py:115
+msgid "Only process attachments."
+msgstr "Csak a mellékleteket dolgozza fel."
+
+#: paperless_mail/models.py:105
+msgid "Process full Mail (with embedded attachments in file) as .eml"
+msgstr "Teljes e-mail feldolgozás (beágyazott mellékletekkel a fájlban) .eml formátumban"
+
+#: paperless_mail/models.py:109
+msgid "Process full Mail (with embedded attachments in file) as .eml + process attachments as separate documents"
+msgstr "A teljes e-mail (a fájlba ágyazott mellékletekkel) .eml-ként történő feldolgozása + a mellékletek külön dokumentumként történő feldolgozása"
+
+#: paperless_mail/models.py:116
+msgid "Process all files, including 'inline' attachments."
+msgstr "Az összes fájl feldolgozása, beleértve az \"inline\" (szövegbe ágyazott) mellékleteket is."
+
+#: paperless_mail/models.py:119
+msgid "System default"
+msgstr "A rendszer alapértelmezése szerint"
+
+#: paperless_mail/models.py:120
+msgid "Text, then HTML"
+msgstr "Szöveg, majd HTML"
+
+#: paperless_mail/models.py:121
+msgid "HTML, then text"
+msgstr "HTML, majd szöveg"
+
+#: paperless_mail/models.py:122
+msgid "HTML only"
+msgstr "Csak HTML"
+
+#: paperless_mail/models.py:123
+msgid "Text only"
+msgstr "Csak szöveg"
+
+#: paperless_mail/models.py:126
+msgid "Delete"
+msgstr "Törlés"
+
+#: paperless_mail/models.py:127
+msgid "Move to specified folder"
+msgstr "Mozgatás a megadott mappába"
+
+#: paperless_mail/models.py:128
+msgid "Mark as read, don't process read mails"
+msgstr "Olvasottként jelölje, ne dolgozza fel az olvasott leveleket"
+
+#: paperless_mail/models.py:129
+msgid "Flag the mail, don't process flagged mails"
+msgstr "Jelölje meg a leveleket, ne dolgozza fel a megjelölt leveleket"
+
+#: paperless_mail/models.py:130
+msgid "Tag the mail with specified tag, don't process tagged mails"
+msgstr "A levelek címkézése megadott címkével, a címkével ellátott levelek feldolgozása nem történik meg"
+
+#: paperless_mail/models.py:133
+msgid "Use subject as title"
+msgstr "Használja a tárgyat címként"
+
+#: paperless_mail/models.py:134
+msgid "Use attachment filename as title"
+msgstr "A csatolmány fájlnevének használata címként"
+
+#: paperless_mail/models.py:135
+msgid "Do not assign title from rule"
+msgstr "Ne rendeljen címet a szabályból"
+
+#: paperless_mail/models.py:138
+msgid "Do not assign a correspondent"
+msgstr "Ne rendeljen hozzá partnert"
+
+#: paperless_mail/models.py:139
+msgid "Use mail address"
+msgstr "E-mail cím használata"
+
+#: paperless_mail/models.py:140
+msgid "Use name (or mail address if not available)"
+msgstr "Név használata (vagy e-mail cím, ha nem áll rendelkezésre)"
+
+#: paperless_mail/models.py:141
+msgid "Use correspondent selected below"
+msgstr "Használja az alább kiválasztott partnert"
+
+#: paperless_mail/models.py:151
+msgid "account"
+msgstr "fiók"
+
+#: paperless_mail/models.py:157 paperless_mail/models.py:326
+msgid "folder"
+msgstr "mappa"
+
+#: paperless_mail/models.py:161
+msgid "Subfolders must be separated by a delimiter, often a dot ('.') or slash ('/'), but it varies by mail server."
+msgstr "Az almappákat el kell választani egymástól egy elválasztó jelzővel, gyakran egy ponttal ('.') vagy egy perjel ('/'), de ez levelezőszerverenként változik."
+
+#: paperless_mail/models.py:167
+msgid "filter from"
+msgstr "szűrő feladóra"
+
+#: paperless_mail/models.py:174
+msgid "filter to"
+msgstr "szűrő címzettre"
+
+#: paperless_mail/models.py:181
+msgid "filter subject"
+msgstr "szűrő tárgyra"
+
+#: paperless_mail/models.py:188
+msgid "filter body"
+msgstr "szűrő tartalomra"
+
+#: paperless_mail/models.py:195
+msgid "filter attachment filename inclusive"
+msgstr "szűrő csatolt fájlnévre beleértve"
+
+#: paperless_mail/models.py:207
+msgid "filter attachment filename exclusive"
+msgstr "szűrő csatolt fájlnévre exkluzív"
+
+#: paperless_mail/models.py:212
+msgid "Do not consume documents which entirely match this filename if specified. Wildcards such as *.pdf or *invoice* are allowed. Case insensitive."
+msgstr "Ne dolgozza fel azokat a dokumentumokat, amelyek teljes egészében megfelelnek ennek a fájlnévnek, ha meg van adva. Az olyan helyettesítő karakterek, mint *.pdf vagy *számla* engedélyezettek. Nagy- és kisbetűkre nem érzékeny."
+
+#: paperless_mail/models.py:219
+msgid "maximum age"
+msgstr "maximális életkor"
+
+#: paperless_mail/models.py:221
+msgid "Specified in days."
+msgstr "Napokban megadva."
+
+#: paperless_mail/models.py:225
+msgid "attachment type"
+msgstr "csatolás típusa"
+
+#: paperless_mail/models.py:229
+msgid "Inline attachments include embedded images, so it's best to combine this option with a filename filter."
+msgstr "Az inline (szövegbe ágyazott) csatolmányok beágyazott képeket is tartalmaznak, ezért ezt az opciót célszerű egy fájlnévszűrővel kombinálni."
+
+#: paperless_mail/models.py:235
+msgid "consumption scope"
+msgstr "beolvasás terjedelme"
+
+#: paperless_mail/models.py:241
+msgid "pdf layout"
+msgstr "pdf elrendezése"
+
+#: paperless_mail/models.py:247
+msgid "action"
+msgstr "művelet"
+
+#: paperless_mail/models.py:253
+msgid "action parameter"
+msgstr "művelet paraméter"
+
+#: paperless_mail/models.py:258
+msgid "Additional parameter for the action selected above, i.e., the target folder of the move to folder action. Subfolders must be separated by dots."
+msgstr "A fent kiválasztott művelet további paramétere, azaz a mappába áthelyezés művelet célmappája. Az almappákat pontokkal kell elválasztani."
+
+#: paperless_mail/models.py:266
+msgid "assign title from"
+msgstr "cím hozzárendelése a"
+
+#: paperless_mail/models.py:286
+msgid "assign correspondent from"
+msgstr "rendelje hozzá a kapcsolattartót a"
+
+#: paperless_mail/models.py:300
+msgid "Assign the rule owner to documents"
+msgstr "A szabály tulajdonosának hozzárendelése a dokumentumokhoz"
+
+#: paperless_mail/models.py:305
+msgid "Stop processing further rules"
+msgstr "További szabályok alkalmazásának felfüggesztése"
+
+#: paperless_mail/models.py:308
+msgid "If True, no further rules will be processed after this one if any document is queued."
+msgstr "Ha 'Igaz', akkor ez után további szabály nem lesz alkalmazva, amennyiben dokumentum listázásra került."
+
+#: paperless_mail/models.py:334
+msgid "uid"
+msgstr "uid"
+
+#: paperless_mail/models.py:342
+msgid "subject"
+msgstr "tárgy"
+
+#: paperless_mail/models.py:350
+msgid "received"
+msgstr "fogadott"
+
+#: paperless_mail/models.py:357
+msgid "processed"
+msgstr "feldolgozott"
+
+#: paperless_mail/models.py:363
+msgid "status"
+msgstr "állapot"
+
+#: paperless_mail/models.py:371
+msgid "error"
+msgstr "hiba"
+

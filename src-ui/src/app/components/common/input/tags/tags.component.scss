@@ -1,0 +1,52 @@
+.selected-icon {
+  min-width: 1em;
+  min-height: 1em;
+}
+
+.tag-wrap {
+  font-size: 1rem;
+}
+
+.paperless-input-select.disabled {
+  .input-group {
+      cursor: not-allowed;
+  }
+
+  ::ng-deep ng-select {
+      pointer-events: none;
+
+      .ng-select-container {
+          background-color: var(--pngx-bg-disabled) !important;
+      }
+  }
+}
+
+// Dropdown hierarchy reveal for ng-select options
+:host ::ng-deep .ng-dropdown-panel .ng-option {
+  overflow-x: auto !important;
+
+  .tag-option-row {
+    font-size: 1rem;
+    width: max-content;
+  }
+
+  .hierarchy-reveal {
+    overflow: hidden;
+    max-width: 0;
+    transition: max-width 200ms ease;
+  }
+
+  .parents .badge {
+    white-space: nowrap;
+  }
+}
+
+:host ::ng-deep .ng-dropdown-panel .ng-option:hover .hierarchy-reveal,
+:host ::ng-deep .ng-dropdown-panel .ng-option.ng-option-marked .hierarchy-reveal {
+  max-width: 1000px;
+}
+
+::ng-deep .ng-dropdown-panel .ng-option:hover .hierarchy-indicator,
+:host ::ng-deep .ng-dropdown-panel .ng-option.ng-option-marked .hierarchy-indicator {
+  background: transparent;
+}

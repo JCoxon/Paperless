@@ -1,0 +1,57 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "./src",
+			"name": "Backend"
+		},
+		{
+			"path": "./src-ui",
+			"name": "Frontend"
+		},
+		{
+			"path": "./.github",
+			"name": "CI/CD"
+		},
+		{
+			"path": "./docs",
+			"name": "Documentation"
+		}
+
+	],
+	"settings": {
+		"files.exclude": {
+			"**/__pycache__": true,
+			"**/.mypy_cache": true,
+			"**/.ruff_cache": true,
+			"**/.pytest_cache": true,
+			"**/.idea": true,
+			"**/.venv": true,
+			"**/.coverage": true,
+			"**/coverage.json": true,
+			"htmlcov/": true,
+			"coverage.xml": true,
+			"junit.xml": true
+		},
+		"python.languageServer": "Pylance",
+		"python.defaultInterpreterPath": "${workspaceFolder:paperless-ngx}/.venv/bin/python3",
+		"python.analysis.extraPaths": ["${workspaceFolder:paperless-ngx}/src"],
+		"python.analysis.inlayHints.pytestParameters": true,
+		"python.testing.pytestEnabled": true,
+		"python.testing.unittestEnabled": false,
+		"[python]": {
+			"editor.defaultFormatter": "charliermarsh.ruff",
+			"editor.formatOnSave": true,
+			"editor.codeActionsOnSave": {
+				"source.fixAll.ruff": "explicit",
+				"source.organizeImports.ruff": "explicit"
+			}
+		}
+	},
+	"extensions": {
+		"recommendations": ["ms-python.python", "charliermarsh.ruff", "editorconfig.editorconfig"],
+		"unwantedRecommendations": ["ms-python.black-formatter"]
+	}
+}

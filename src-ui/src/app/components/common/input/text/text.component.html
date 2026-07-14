@@ -1,0 +1,29 @@
+<div class="mb-3" [class.pb-3]="error">
+  <div class="row">
+    <div class="d-flex align-items-center position-relative hidden-button-container" [class.col-md-3]="horizontal">
+      @if (title) {
+        <label class="form-label" [class.mb-md-0]="horizontal" [for]="inputId">{{title}}</label>
+      }
+      @if (removable) {
+        <button type="button" class="btn btn-sm btn-danger position-absolute left-0" (click)="removed.emit(this)">
+          <i-bs name="x" class="me-1"></i-bs><ng-container i18n>Remove</ng-container>
+          </button>
+        }
+      </div>
+      <div class="position-relative" [class.col-md-9]="horizontal">
+        <input #inputField type="text" class="form-control" [class.is-invalid]="error" [id]="inputId" [(ngModel)]="value" (change)="onChange(value)" [disabled]="disabled" [autocomplete]="autocomplete" [placeholder]="placeholder">
+        @if (hint) {
+          <small class="form-text text-muted" [innerHTML]="hint"></small>
+        }
+        @if (getSuggestion()?.length > 0) {
+          <small>
+            <span i18n>Suggestion:</span>&nbsp;
+            <a (click)="applySuggestion(s)" [routerLink]="[]">{{getSuggestion()}}</a>&nbsp;
+          </small>
+        }
+        <div class="invalid-feedback position-absolute top-100">
+          {{error}}
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,224 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "paperless-ui": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "pngx",
+      "i18n": {
+        "sourceLocale": "en-US",
+        "locales": {
+          "ar-AR": "src/locale/messages.ar_AR.xlf",
+          "af-ZA": "src/locale/messages.af_ZA.xlf",
+          "bg-BG": "src/locale/messages.bg_BG.xlf",
+          "be-BY": "src/locale/messages.be_BY.xlf",
+          "ca-ES": "src/locale/messages.ca_ES.xlf",
+          "cs-CZ": "src/locale/messages.cs_CZ.xlf",
+          "da-DK": "src/locale/messages.da_DK.xlf",
+          "de-DE": "src/locale/messages.de_DE.xlf",
+          "el-GR": "src/locale/messages.el_GR.xlf",
+          "en-GB": "src/locale/messages.en_GB.xlf",
+          "es-ES": "src/locale/messages.es_ES.xlf",
+          "fa-IR": "src/locale/messages.fa_IR.xlf",
+          "fi-FI": "src/locale/messages.fi_FI.xlf",
+          "fr-FR": "src/locale/messages.fr_FR.xlf",
+          "hu-HU": "src/locale/messages.hu_HU.xlf",
+          "id-ID": "src/locale/messages.id_ID.xlf",
+          "it-IT": "src/locale/messages.it_IT.xlf",
+          "ja-JP": "src/locale/messages.ja_JP.xlf",
+          "lb-LU": "src/locale/messages.lb_LU.xlf",
+          "ko-KR": "src/locale/messages.ko_KR.xlf",
+          "nl-NL": "src/locale/messages.nl_NL.xlf",
+          "no-NO": "src/locale/messages.no_NO.xlf",
+          "pl-PL": "src/locale/messages.pl_PL.xlf",
+          "pt-BR": "src/locale/messages.pt_BR.xlf",
+          "pt-PT": "src/locale/messages.pt_PT.xlf",
+          "ro-RO": "src/locale/messages.ro_RO.xlf",
+          "ru-RU": "src/locale/messages.ru_RU.xlf",
+          "sk-SK": "src/locale/messages.sk_SK.xlf",
+          "sl-SI": "src/locale/messages.sl_SI.xlf",
+          "sr-CS": "src/locale/messages.sr_CS.xlf",
+          "sv-SE": "src/locale/messages.sv_SE.xlf",
+          "tr-TR": "src/locale/messages.tr_TR.xlf",
+          "uk-UA": "src/locale/messages.uk_UA.xlf",
+          "vi-VN": "src/locale/messages.vi_VN.xlf",
+          "zh-CN": "src/locale/messages.zh_CN.xlf",
+          "zh-TW": "src/locale/messages.zh_TW.xlf"
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular-builders/custom-webpack:browser",
+          "options": {
+            "customWebpackConfig": {
+                "path": "./extra-webpack.config.ts"
+            },
+            "outputPath": "dist/paperless-ui",
+            "main": "src/main.ts",
+            "outputHashing": "none",
+            "index": "src/index.html",
+            "polyfills": [
+              "src/polyfills.ts"
+            ],
+            "tsConfig": "tsconfig.app.json",
+            "localize": true,
+            "assets": [
+              "src/favicon.ico",
+              "src/apple-touch-icon.png",
+              "src/assets",
+              "src/manifest.webmanifest",
+              {
+                "glob": "{pdf.worker.min.mjs,pdf.min.mjs}",
+                "input": "node_modules/pdfjs-dist/legacy/build/",
+                "output": "/assets/js/"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/pdfjs-dist/wasm/",
+                "output": "/assets/wasm/"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/pdfjs-dist/iccs/",
+                "output": "/assets/iccs/"
+              }
+            ],
+            "styles": [
+              "src/styles.scss"
+            ],
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "file-saver",
+              "utif"
+            ],
+            "extractLicenses": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true,
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "."
+              ]
+            }
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "outputPath": "../src/documents/static/frontend/",
+              "optimization": true,
+              "outputHashing": "none",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "30kb"
+                }
+              ]
+            },
+            "en-US": {
+              "localize": [
+                "en-US"
+              ]
+            }
+          },
+          "defaultConfiguration": ""
+        },
+        "serve": {
+          "builder": "@angular-builders/custom-webpack:dev-server",
+          "options": {
+            "buildTarget": "paperless-ui:build:en-US"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "paperless-ui:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-builders/custom-webpack:extract-i18n",
+          "options": {
+            "buildTarget": "paperless-ui:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-builders/jest:run",
+          "options": {
+            "tsConfig": "tsconfig.spec.json",
+            "zoneless": true,
+            "watch": false,
+            "coverage": true
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ],
+    "analytics": false,
+    "packageManager": "pnpm"
+  },
+  "schematics": {
+    "@angular-eslint/schematics:application": {
+      "setParserOptionsProject": true
+    },
+    "@angular-eslint/schematics:library": {
+      "setParserOptionsProject": true
+    },
+    "@schematics/angular:component": {
+      "type": "component"
+    },
+    "@schematics/angular:directive": {
+      "type": "directive"
+    },
+    "@schematics/angular:service": {
+      "type": "service"
+    },
+    "@schematics/angular:guard": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:interceptor": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:module": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:pipe": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:resolver": {
+      "typeSeparator": "."
+    }
+  }
+}

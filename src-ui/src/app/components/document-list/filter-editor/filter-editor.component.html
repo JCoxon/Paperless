@@ -1,0 +1,112 @@
+<div class="row flex-wrap row-gap-3" tourAnchor="tour.documents-filter-editor">
+  <div class="col">
+    <div class="form-inline d-flex align-items-center fade" [class.show]="show()">
+      <div class="input-group input-group-sm flex-fill w-auto flex-nowrap">
+        <div ngbDropdown>
+          <button class="btn btn-sm btn-outline-primary" ngbDropdownToggle>{{textFilterTargetName}}</button>
+          <div class="dropdown-menu shadow" ngbDropdownMenu>
+            @for (t of textFilterTargets; track t) {
+              <button ngbDropdownItem [class.active]="textFilterTarget === t.id" (click)="changeTextFilterTarget(t.id)">{{t.name}}</button>
+            }
+          </div>
+        </div>
+        @if (textFilterTarget === 'asn') {
+          <select class="form-select flex-grow-0 w-auto" [(ngModel)]="textFilterModifier" (change)="textFilterModifierChange()">
+            @for (m of textFilterModifiers; track m) {
+              <option ngbDropdownItem [value]="m.id">{{m.label}}</option>
+            }
+          </select>
+        }
+        @if (_textFilter) {
+          <button class="btn btn-link btn-sm px-2 position-absolute top-0 end-0 z-10" (click)="resetTextField()">
+            <i-bs width="1em" height="1em" name="x"></i-bs>
+          </button>
+        }
+        <input #textFilterInput class="form-control form-control-sm" type="text"
+        [disabled]="textFilterModifierIsNull"
+        [(ngModel)]="textFilter"
+        (keyup)="textFilterKeyup($event)"
+        [ngbTypeahead]="searchAutoComplete"
+        (selectItem)="itemSelected($event)"
+        [readonly]="textFilterTarget === 'fulltext-morelike'">
+      </div>
+    </div>
+  </div>
+  <div class="col-auto">
+    <div class="d-flex flex-wrap gap-3">
+      <div class="d-flex flex-wrap gap-2">
+        @if (permissionsService.currentUserCan(PermissionAction.View, PermissionType.Tag) && tagSelectionModel.items.length > 0) {
+          <pngx-filterable-dropdown class="flex-fill fade" [class.show]="show()" title="Tags" icon="tag-fill" i18n-title
+          filterPlaceholder="Filter tags" i18n-filterPlaceholder
+          [(selectionModel)]="tagSelectionModel"
+          (selectionModelChange)="updateRules()"
+          (opened)="onTagsDropdownOpen()"
+          [documentCounts]="tagDocumentCounts"
+          [allowSelectNone]="true"
+          [disabled]="disabled"
+          shortcutKey="t"></pngx-filterable-dropdown>
+        }
+        @if (permissionsService.currentUserCan(PermissionAction.View, PermissionType.Correspondent) && correspondentSelectionModel.items.length > 0) {
+          <pngx-filterable-dropdown class="flex-fill fade" [class.show]="show()" title="Correspondent" icon="person-fill" i18n-title
+          filterPlaceholder="Filter correspondents" i18n-filterPlaceholder
+          [(selectionModel)]="correspondentSelectionModel"
+          (selectionModelChange)="updateRules()"
+          (opened)="onCorrespondentDropdownOpen()"
+          [documentCounts]="correspondentDocumentCounts"
+          [allowSelectNone]="true"
+          [disabled]="disabled"
+          shortcutKey="y"></pngx-filterable-dropdown>
+        }
+        @if (permissionsService.currentUserCan(PermissionAction.View, PermissionType.DocumentType) && documentTypeSelectionModel.items.length > 0) {
+            <pngx-filterable-dropdown class="flex-fill fade" [class.show]="show()" title="Document type" icon="file-earmark-fill" i18n-title
+            filterPlaceholder="Filter document types" i18n-filterPlaceholder
+            [(selectionModel)]="documentTypeSelectionModel"
+            (selectionModelChange)="updateRules()"
+            (opened)="onDocumentTypeDropdownOpen()"
+            [documentCounts]="documentTypeDocumentCounts"
+            [allowSelectNone]="true"
+            [disabled]="disabled"
+            shortcutKey="u"></pngx-filterable-dropdown>
+        }
+        @if (permissionsService.currentUserCan(PermissionAction.View, PermissionType.StoragePath) && storagePathSelectionModel.items.length > 0) {
+          <pngx-filterable-dropdown class="flex-fill fade" [class.show]="show()" title="Storage path" icon="folder-fill" i18n-title
+          filterPlaceholder="Filter storage paths" i18n-filterPlaceholder
+          [(selectionModel)]="storagePathSelectionModel"
+          (selectionModelChange)="updateRules()"
+          (opened)="onStoragePathDropdownOpen()"
+          [documentCounts]="storagePathDocumentCounts"
+          [allowSelectNone]="true"
+          [disabled]="disabled"
+          shortcutKey="i"></pngx-filterable-dropdown>
+        }
+
+        @if (permissionsService.currentUserCan(PermissionAction.View, PermissionType.CustomField) && customFields.length > 0) {
+          <pngx-custom-fields-query-dropdown class="flex-fill fade" [class.show]="show()" title="Custom fields" icon="ui-radios" i18n-title
+          [(selectionModel)]="customFieldQueriesModel"
+          (selectionModelChange)="updateRules()"
+          ></pngx-custom-fields-query-dropdown>
+        }
+        <pngx-dates-dropdown class="flex-fill fade" [class.show]="show()"
+          title="Dates" i18n-title
+          placement="bottom-end"
+          (datesSet)="updateRules()"
+          [(createdDateTo)]="dateCreatedTo"
+          [(createdDateFrom)]="dateCreatedFrom"
+          [(createdRelativeDate)]="dateCreatedRelativeDate"
+          [(addedDateTo)]="dateAddedTo"
+          [(addedDateFrom)]="dateAddedFrom"
+          [(addedRelativeDate)]="dateAddedRelativeDate">
+        </pngx-dates-dropdown>
+        <pngx-permissions-filter-dropdown class="flex-fill fade" [class.show]="show()"
+          title="Permissions" i18n-title
+          (ownerFilterSet)="updateRules()"
+        [(selectionModel)]="permissionsSelectionModel"></pngx-permissions-filter-dropdown>
+      </div>
+      <div class="d-flex flex-wrap d-none d-sm-inline-block">
+        <button class="btn btn-outline-secondary btn-sm" [disabled]="!rulesModified" (click)="resetSelected()">
+          <i-bs class="ms-n1" name="x"></i-bs><ng-container i18n>Reset filters</ng-container>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

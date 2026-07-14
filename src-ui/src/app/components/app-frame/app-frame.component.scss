@@ -1,0 +1,346 @@
+/*
+ * Sidebar
+ */
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 995; /* Behind the navbar */
+  padding: 50px 0 0; /* Height of navbar */
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+  overflow-y: auto;
+  --pngx-sidebar-width: 100%;
+  max-width: var(--pngx-sidebar-width);
+  transition: all .2s ease;
+
+  .sidebar-heading .spinner-border {
+    width: 0.8em;
+    height: 0.8em;
+  }
+
+  .view-name {
+    max-width: calc(100% - 50px)
+  }
+
+  .nav-group:not(:has(.app-link)) .sidebar-heading {
+    display: none !important;
+  }
+
+  // These come from the col-* classes for non-slim sidebar, needed for animation
+  @media (min-width: 768px) {
+    --pngx-sidebar-width: 25%;
+  }
+
+  @media (min-width: 992px) {
+    --pngx-sidebar-width: 16.66666667%;
+  }
+
+  @media (min-width: 2400px) {
+    --pngx-sidebar-width: 8.33333333%;
+  }
+}
+@media (max-width: 767.98px) {
+  .sidebar {
+    top: 3.5rem;
+  }
+
+  .search-container {
+    max-height: 4.5rem;
+    overflow: hidden;
+    transition: max-height .2s ease, opacity .2s ease, padding-top .2s ease, padding-bottom .2s ease;
+
+    &.mobile-hidden {
+      max-height: 0;
+      opacity: 0;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+  }
+
+  main.mobile-search-hidden {
+    padding-top: 56px;
+  }
+}
+
+main {
+  transition: all .2s ease;
+  padding-top: 110px;
+}
+
+@media (min-width: 768px) {
+  main {
+    padding-top: 56px;
+  }
+}
+
+.sidebar-slim-toggler {
+  display: none; // hide on mobile
+}
+
+.sidebar li.nav-item span,
+.sidebar .sidebar-heading span {
+  transition: all .1s ease;
+}
+
+@media(min-width: 768px) {
+  .sidebar.slim {
+    max-width: 50px;
+
+    li.nav-item span.badge {
+      display: inline-block;
+      margin-right: 2px;
+    }
+  }
+
+  .sidebar.slim:not(.animating) {
+    transition: none;
+
+    li.nav-item span,
+    .sidebar-heading span {
+      display: none;
+    }
+  }
+
+  .sidebar.slim:not(.animating) ~ main.col-slim {
+    transition: none;
+  }
+
+  .sidebar.animating {
+    li.nav-item span,
+    .sidebar-heading span {
+      display: unset;
+      position: absolute;
+      opacity: 0;
+      overflow: hidden;
+    }
+  }
+
+  .sidebar:not(.slim):not(.animating) {
+    li.nav-item span,
+    .sidebar-heading span {
+      position: unset;
+      opacity: 1;
+      overflow: auto;
+    }
+  }
+
+  .sidebar.slim,
+  .sidebar.animating {
+    .text-truncate {
+      text-overflow: unset !important;
+      word-wrap: break-word !important;
+    }
+  }
+
+  .sidebar.slim {
+    li.nav-item span.badge {
+      display: inline-block;
+      margin-right: 2px;
+    }
+  }
+
+  .sidebar-slim-toggler {
+    display: block;
+    position: fixed;
+    left: calc(var(--pngx-sidebar-width) - 12px);
+    top: 60px;
+    z-index: 996;
+    --bs-btn-padding-x: 0.35rem;
+    --bs-btn-padding-y: 0.125rem;
+    transition: all .2s ease;
+  }
+
+  .sidebar.slim .sidebar-slim-toggler {
+    --pngx-sidebar-width: 50px !important;
+  }
+}
+
+::ng-deep .popover-slim .popover-body {
+  --bs-popover-body-padding-x: .5rem;
+  --bs-popover-body-padding-y: .5rem;
+}
+
+.sidebar-sticky {
+  position: relative;
+  top: 0;
+  height: 100%;
+  padding-top: 0.5rem;
+  overflow-x: hidden;
+  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+  min-height: min-content;
+}
+@supports ((position: -webkit-sticky) or (position: sticky)) {
+  .sidebar-sticky {
+    position: -webkit-sticky;
+    position: sticky;
+  }
+}
+
+.sidebar .nav-link {
+  font-weight: 500;
+  white-space: nowrap;
+
+  &:hover, &.active, &:focus {
+    color: var(--bs-primary);
+  }
+
+  &:focus-visible {
+    outline: none;
+    background-color: var(--bs-body-bg);
+  }
+
+  &.active {
+    font-weight: bold;
+  }
+
+  i-bs {
+    position: relative;
+    top: -1px;
+  }
+}
+
+.attributes-row .attributes-expand-btn {
+  opacity: 0.2;
+  transition: opacity 0.15s ease-in-out;
+}
+
+.attributes-row:hover .attributes-expand-btn {
+  opacity: 1;
+}
+
+.sidebar-heading {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.nav {
+  flex-wrap: nowrap;
+}
+
+.nav-item {
+  position: relative;
+  list-style-type: none;
+
+  &:hover .close {
+    display: flex;
+  }
+
+  .close {
+    display: none;
+    position: absolute !important;
+    cursor: pointer;
+    opacity: 1;
+    top: 0;
+    padding: .25rem .3rem 0;
+    right: .4rem;
+    width: 1.8rem;
+    height: 100%;
+
+    i-bs {
+      opacity: 0.5;
+    }
+
+    &:hover i-bs {
+      opacity: 1;
+    }
+  }
+
+  .nav-link-additional {
+    margin-top: 0.1rem;
+    margin-left: 0.25rem;
+    padding-top: 0.5rem;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    i-bs {
+      margin-bottom: 2px;
+    }
+  }
+}
+
+
+/*
+ * Navbar
+ */
+
+.navbar-brand {
+  font-size: 1rem;
+
+  .flex-column {
+    padding: 0.15rem 0;
+  }
+
+  .byline {
+    font-size: 0.5rem;
+    letter-spacing: 0.1rem;
+  }
+}
+
+@media screen and (min-width: 376px) and (max-width: 768px) {
+  .navbar-toggler {
+    // compensate for 2 buttons on the right
+    margin-right: 45px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .navbar-brand.slim {
+    max-width: 50px;
+  }
+}
+
+@media screen and (max-width: 345px) {
+  .custom-title {
+    max-width: 110px;
+    overflow: hidden;
+  }
+}
+
+:host ::ng-deep .dropdown.show .dropdown-toggle,
+:host ::ng-deep .dropdown-toggle:hover {
+  opacity: 0.7;
+}
+
+.dropdown-toggle::after {
+  margin-left: 0.4em;
+  vertical-align: 0.155em;
+}
+
+.navbar .dropdown-menu {
+  font-size: 0.875rem; // body size
+
+  a i-bs, button i-bs {
+    opacity: 0.6;
+  }
+}
+
+.version-check {
+  animation: pulse 2s ease-in-out 0s 1;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 100%;
+  }
+  75% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 100%;
+  }
+}
+
+.nav-item > .position-absolute {
+  cursor: move;
+}
+
+::ng-deep .navItemDrag .position-absolute i-bs {
+  display: none;
+}

@@ -1,0 +1,103 @@
+:root>* {
+    --paperless-green: #17541f;
+    --paperless-green-accent: #2b8a38;
+    --md-primary-fg-color: var(--paperless-green);
+    --md-primary-fg-color--dark: var(--paperless-green);
+    --md-primary-fg-color--light: var(--paperless-green-accent);
+    --md-accent-fg-color: var(--paperless-green-accent);
+    --md-typeset-a-color: #21652a;
+}
+
+.md-header,
+.md-tabs {
+    background-color: var(--paperless-green);
+    color: #fff;
+}
+
+.md-tabs__link {
+    color: rgba(255, 255, 255, 0.82);
+}
+
+.md-tabs__link:hover,
+.md-tabs__link--active {
+    color: #fff;
+}
+
+[data-md-color-scheme="slate"] {
+    --md-hue: 222;
+    --md-default-bg-color: hsla(var(--md-hue), 15%, 10%, 1);
+}
+
+@media (min-width: 768px) {
+    .grid-left {
+        width: 33%;
+        float: left;
+    }
+    .grid-right {
+        width: 62%;
+        margin-left: 4%;
+        float: left;
+    }
+
+    .grid-flipped-left {
+        width: 66%;
+        float: left;
+    }
+
+    .grid-flipped-right {
+        width: 29%;
+        margin-left: 4%;
+        float: left;
+    }
+
+    .grid-half-left {
+        width: 48%;
+        float: left;
+    }
+
+    .grid-half-right {
+        width: 48%;
+        margin-left: 4%;
+        float: left;
+    }
+}
+
+.grid-left > p {
+    margin-bottom: 2rem;
+}
+
+
+.grid-right p {
+    margin: 0;
+}
+
+.clear {
+    clear: both;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.index-callout {
+    margin-right: .5rem;
+}
+
+/* make code in headers not bold */
+h4 code {
+    font-weight: normal;
+}
+
+/* Hide config vars from sidebar, toc and move the border on mobile case their hidden */
+.md-nav.md-nav--secondary .md-nav__item:has(> .md-nav__link[href*="PAPERLESS_"]),
+.md-nav.md-nav--secondary .md-nav__item:has(> .md-nav__link[href*="USERMAP_"]) {
+    display: none;
+}
+
+@media screen and (max-width: 76.1875em) {
+    .md-nav--primary .md-nav__item {
+        border-top: none;
+    }
+
+    .md-nav--primary .md-nav__link {
+        border-top: .05rem solid var(--md-default-fg-color--lightest);
+    }
+}

@@ -1,0 +1,169 @@
+import hashlib
+import logging
+import shutil
+from collections.abc import Callable
+from collections.abc import Iterable
+from os import utime
+from pathlib import Path
+from subprocess import CompletedProcess
+from subprocess import run
+from typing import TypeVar
+
+from django.conf import settings
+from PIL import Image
+
+_T = TypeVar("_T")
+
+# A function that wraps an iterable — typically used to inject a progress bar.
+IterWrapper = Callable[[Iterable[_T]], Iterable[_T]]
+
+
+def identity(iterable: Iterable[_T]) -> Iterable[_T]:
+    """Return the iterable unchanged; the no-op default for IterWrapper."""
+    return iterable
+
+
+def _coerce_to_path(
+    source: Path | str,
+    dest: Path | str,
+) -> tuple[Path, Path]:
+    return Path(source).resolve(), Path(dest).resolve()
+
+
+def copy_basic_file_stats(source: Path | str, dest: Path | str) -> None:
+    """
+    Copies only the m_time and a_time attributes from source to destination.
+    Both are expected to exist.
+
+    The extended attribute copy does weird things with SELinux and files
+    copied from temporary directories and copystat doesn't allow disabling
+    these copies.
+
+    If there is a PermissionError, skip copying file stats.
+    """
+    source, dest = _coerce_to_path(source, dest)
+    src_stat = source.stat()
+
+    try:
+        utime(dest, ns=(src_stat.st_atime_ns, src_stat.st_mtime_ns))
+    except PermissionError:
+        pass
+
+
+def copy_file_with_basic_stats(
+    source: Path | str,
+    dest: Path | str,
+) -> None:
+    """
+    A sort of simpler copy2 that doesn't copy extended file attributes,
+    only the access time and modified times from source to dest.
+
+    The extended attribute copy does weird things with SELinux and files
+    copied from temporary directories.
+
+    If there is a PermissionError (e.g., on ZFS with acltype=nfsv4)
+    fall back to copyfile (data only).
+    """
+    source, dest = _coerce_to_path(source, dest)
+
+    try:
+        shutil.copy(source, dest)
+    except PermissionError:
+        shutil.copyfile(source, dest)
+
+    copy_basic_file_stats(source, dest)
+
+
+def maybe_override_pixel_limit() -> None:
+    """
+    Maybe overrides the PIL limit on pixel count, if configured to allow it
+    """
+    limit: float | int | None = settings.MAX_IMAGE_PIXELS
+    if limit is not None and limit >= 0:
+        pixel_count = limit
+        if pixel_count == 0:
+            pixel_count = None
+        Image.MAX_IMAGE_PIXELS = pixel_count
+
+
+def run_subprocess(
+    arguments: list[str],
+    env: dict[str, str] | None = None,
+    logger: logging.Logger | None = None,
+    *,
+    check_exit_code: bool = True,
+    log_stdout: bool = True,
+    log_stderr: bool = True,
+) -> CompletedProcess:
+    """
+    Runs a subprocess and logs its output, checking return code if requested
+    """
+
+    proc_name = arguments[0]
+
+    completed_proc = run(args=arguments, env=env, capture_output=True, check=False)
+
+    if logger:
+        logger.info(f"{proc_name} exited {completed_proc.returncode}")
+
+    if log_stdout and logger and completed_proc.stdout:
+        stdout_str = (
+            completed_proc.stdout.decode("utf8", errors="ignore")
+            .strip()
+            .split(
+                "\n",
+            )
+        )
+        logger.info(f"{proc_name} stdout:")
+        for line in stdout_str:
+            logger.info(line)
+
+    if log_stderr and logger and completed_proc.stderr:
+        stderr_str = (
+            completed_proc.stderr.decode("utf8", errors="ignore")
+            .strip()
+            .split(
+                "\n",
+            )
+        )
+        logger.info(f"{proc_name} stderr:")
+        for line in stderr_str:
+            logger.warning(line)
+
+    # Last, if requested, after logging outputs
+    if check_exit_code:
+        completed_proc.check_returncode()
+
+    return completed_proc
+
+
+def get_boolean(boolstr: str) -> bool:
+    """
+    Return a boolean value from a string representation.
+    """
+    return bool(boolstr.lower() in ("yes", "y", "1", "t", "true"))
+
+
+def compute_checksum(path: Path, chunk_size: int = 65536) -> str:
+    """
+    Compute the SHA-256 checksum of a file.
+
+    Reads the file in chunks to avoid loading the entire file into memory.
+
+    Args:
+        path (Path): Path to the file to hash.
+        chunk_size (int, optional): Number of bytes to read per chunk.
+            Defaults to 65536.
+
+    Returns:
+        str: Hexadecimal SHA-256 digest of the file contents.
+
+    Raises:
+        FileNotFoundError: If the file does not exist.
+        OSError: If the file cannot be read.
+    """
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        while chunk := f.read(chunk_size):
+            h.update(chunk)
+    return h.hexdigest()
